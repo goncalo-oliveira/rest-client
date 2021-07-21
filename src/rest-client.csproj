@@ -9,6 +9,7 @@
     <Description>REST Client for .NET</Description>
     <RepositoryUrl>https://github.com/goncalo-oliveira/rest-client</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageIcon>faactory.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
