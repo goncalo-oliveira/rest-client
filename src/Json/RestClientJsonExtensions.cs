@@ -13,10 +13,11 @@ namespace Faactory.RestClient
     public static class RestClientJsonExtensions
     {
         /// <summary>
-        /// Sends a GET request to the specified resource location
+        /// Sends a GET request to the specified resource location and deserializes from the JSON in the response body
         /// </summary>
         /// <param name="url">The resource location</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
+        /// <typeparam name="T">The type of the object to deserialize to</typeparam>
         public static async Task<RestObjectResponse<T>> GetJsonAsync<T>( this RestClient client, string url, CancellationToken cancellationToken = default )
         {
             var response = await client.GetAsync( url, cancellationToken );
@@ -25,12 +26,12 @@ namespace Faactory.RestClient
         }
 
         /// <summary>
-        /// Sends a POST request to the specified resource location
+        /// Sends a POST request to the specified resource location and serializes the given value as JSON into the request body
         /// </summary>
         /// <param name="url">The resource location</param>
-        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-        /// <typeparam name="T">The value type</typeparam>
+        /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.JsonSerializer.SerializeObject( value );
@@ -39,12 +40,12 @@ namespace Faactory.RestClient
         }
 
         /// <summary>
-        /// Sends a PUT request to the specified resource location
+        /// Sends a PUT request to the specified resource location and serializes the given value as JSON into the request body
         /// </summary>
         /// <param name="url">The resource location</param>
-        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-        /// <typeparam name="T">The value type</typeparam>
+        /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PutJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.JsonSerializer.SerializeObject( value );
@@ -53,12 +54,12 @@ namespace Faactory.RestClient
         }
 
         /// <summary>
-        /// Sends a PATCH request to the specified resource location
+        /// Sends a PATCH request to the specified resource location and serializes the given value as JSON into the request body
         /// </summary>
         /// <param name="url">The resource location</param>
-        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-        /// <typeparam name="T">The value type</typeparam>
+        /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PatchJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.JsonSerializer.SerializeObject( value );

@@ -13,7 +13,7 @@ namespace Faactory.RestClient
         public RestClient( HttpClient baseHttpClient, Json.IJsonSerializer jsonSerializer = null )
         {
             HttpClient = baseHttpClient;
-            JsonSerializer = jsonSerializer ?? new Json.JsonSerializer();
+            JsonSerializer = jsonSerializer ?? new Json.DefaultJsonSerializer();
         }
 
         public RestClient( HttpClient baseHttpClient, string baseUrl, Json.IJsonSerializer jsonSerializer = null )
@@ -74,6 +74,11 @@ namespace Faactory.RestClient
 
         internal async Task<RestResponse> SendASync( Action<HttpRequestMessage> configure, HttpMethod method, string url, HttpContent content = null, CancellationToken cancellationToken = default )
         {
+            if ( url == null )
+            {
+                throw new ArgumentNullException( nameof( url ), "Request URL cannot be null" );
+            }
+
             var message = new HttpRequestMessage( method, url )
             {
                 Content = content

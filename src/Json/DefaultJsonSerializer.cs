@@ -2,7 +2,7 @@ using System;
 
 namespace Faactory.RestClient.Json
 {
-    internal class JsonSerializer : IJsonSerializer
+    internal class DefaultJsonSerializer : IJsonSerializer
     {
         private static readonly System.Text.Json.JsonSerializerOptions serializerOptions = new System.Text.Json.JsonSerializerOptions
         {

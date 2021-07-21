@@ -22,7 +22,7 @@ namespace Faactory.RestClient
             configure?.Invoke( options );
 
             // create request
-            var request = new RestRequest( client, options );
+            var request = new RestRequest( client, options, null ); // TODO: default null
 
             return ( request );
 
@@ -34,7 +34,7 @@ namespace Faactory.RestClient
         /// <param name="url">The request url to scope into</param>
         /// <param name="configure">The action to configure the request</param>
         /// <returns>A pre-configured RestScopedRequest instance</returns>
-        public static RestScopedRequest Configure( this RestClient client, string url, Action<RestRequestOptions> configure )
+        public static RestRequest Configure( this RestClient client, string url, Action<RestRequestOptions> configure )
         {
             var options = new RestRequestOptions();
 
@@ -56,7 +56,7 @@ namespace Faactory.RestClient
             resourceUrl = new ResourceUrl( resourceUrl.Path, options.QueryParameters );
 
             // create scoped request
-            var request = new RestScopedRequest( client, resourceUrl, options );
+            var request = new RestRequest( client, options, resourceUrl );
 
             return ( request );
         }
