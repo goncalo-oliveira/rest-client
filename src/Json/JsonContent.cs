@@ -6,8 +6,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Faactory.RestClient
+namespace Faactory.RestClient.Json
 {
+    /// <summary>
+    /// Provides HTTP content as JSON
+    /// </summary>
     public sealed class JsonContent : StringContent
     {
         internal const string JsonMediaType = "application/json";

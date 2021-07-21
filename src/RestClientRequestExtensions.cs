@@ -6,39 +6,57 @@ namespace Faactory.RestClient
 {
     public static class RestClientRequestExtensions
     {
-        public static RestRequest Configure( this RestClient client, string url, Action<RestRequestOptions> configure )
+        /// <summary>
+        /// Creates a configurable rest request
+        /// </summary>
+        /// <param name="configure">The action to configure the request</param>
+        /// <returns>A pre-configured RestRequest instance</returns>
+        public static RestRequest Configure( this RestClient client, Action<RestRequestOptions> configure )
         {
             var options = new RestRequestOptions();
 
             // add default headers to options
             options.Headers.CopyFrom( client.HttpClient.DefaultRequestHeaders );
 
-            // add default query parameters to options
-            if ( url.Contains( "?" ) )
-            {
-                // copy query parameters to options
-                var uri = new Uri( url );
+            // apply user configuration
+            configure?.Invoke( options );
 
-                options.QueryParameters = System.Web.HttpUtility.ParseQueryString( uri.Query );
+            // create request
+            var request = new RestRequest( client, options );
+
+            return ( request );
+
+        }
+
+        /// <summary>
+        /// Creates a resource scoped and configurable rest request
+        /// </summary>
+        /// <param name="url">The request url to scope into</param>
+        /// <param name="configure">The action to configure the request</param>
+        /// <returns>A pre-configured RestScopedRequest instance</returns>
+        public static RestScopedRequest Configure( this RestClient client, string url, Action<RestRequestOptions> configure )
+        {
+            var options = new RestRequestOptions();
+
+            // add default headers to options
+            options.Headers.CopyFrom( client.HttpClient.DefaultRequestHeaders );
+
+            var resourceUrl = ResourceUrl.FromString( url );
+
+            // add default query parameters to options
+            if ( resourceUrl.QueryParameters.HasKeys() )
+            {
+                options.QueryParameters = resourceUrl.QueryParameters;
             }
 
+            // apply user configuration
             configure?.Invoke( options );
 
             // rebuild request url with query parameters from options
-            if ( options.QueryParameters.HasKeys() )
-            {
-                if ( url.Contains( '?' ) )
-                {
-                    url = url.Substring( 0, url.IndexOf( '?' ) );
-                }
+            resourceUrl = new ResourceUrl( resourceUrl.Path, options.QueryParameters );
 
-                var queryString = options.QueryParameters.AllKeys.Select( key => 
-                    string.Concat( key, "=", System.Web.HttpUtility.UrlEncode( options.QueryParameters[key] ) ) );
-
-                url = string.Concat( url, "?", string.Join( '&', queryString ) );
-            }
-
-            var request = new RestRequest( client, url, options );
+            // create scoped request
+            var request = new RestScopedRequest( client, resourceUrl, options );
 
             return ( request );
         }

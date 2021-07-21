@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace Faactory.RestClient
 {
+    /// <summary>
+    /// Experimental extensions for REST-SCHEMA
+    /// </summary>
     public static class RestRequestOptionsSchemaExtensions
     {
         private static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
@@ -14,6 +17,13 @@ namespace Faactory.RestClient
         private const string schemaMap = "X-Schema-Map";
         private const string schemaInclude = "X-Schema-Include";
 
+
+        /// <summary>
+        /// Add X-Schema-Map header with the given schema data
+        /// <br/>
+        /// THIS IS EXPERIMENTAL CODE. IT MIGHT CHANGE, DISAPPEAR OR BREAK THINGS.
+        /// </summary>
+        /// <param name="schema">The schema data</param>
         public static RestRequestOptions SchemaMap( this RestRequestOptions options, object schema )
         {
             AddSchemaHeader( options, schemaMap, schema );
@@ -21,6 +31,12 @@ namespace Faactory.RestClient
             return ( options );
         }
 
+        /// <summary>
+        /// Add X-Schema-Include header with the given schema data
+        /// <br/>
+        /// THIS IS EXPERIMENTAL CODE. IT MIGHT CHANGE, DISAPPEAR OR BREAK THINGS.
+        /// </summary>
+        /// <param name="schema">The schema data</param>
         public static RestRequestOptions SchemaInclude( this RestRequestOptions options, object schema )
         {
             AddSchemaHeader( options, schemaMap, schema );
@@ -32,9 +48,6 @@ namespace Faactory.RestClient
         {
             var json = JsonSerializer.Serialize( schema, jsonSerializerOptions );
             var value = Convert.ToBase64String( Encoding.UTF8.GetBytes( json ) );
-
-            System.Diagnostics.Debug.WriteLine( $"{headerName}: b64( {json} )" );
-            System.Diagnostics.Debug.WriteLine( $"{headerName}: {value}" );
 
             // remove any previous X-Schema-Map or X-Schema-Include headers
             if ( options.Headers.Contains( schemaMap ) )

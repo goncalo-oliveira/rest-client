@@ -5,6 +5,9 @@ using System.Net.Http.Headers;
 
 namespace Faactory.RestClient
 {
+    /// <summary>
+    /// Configurable options for a scoped request
+    /// </summary>
     public sealed class RestRequestOptions
     {
         internal RestRequestOptions()
@@ -13,7 +16,14 @@ namespace Faactory.RestClient
             QueryParameters = new NameValueCollection();
         }
 
+        /// <summary>
+        /// Gets the request headers
+        /// </summary>
         public HttpRequestHeaders Headers { get; }
+
+        /// <summary>
+        /// Gets the request query parameters
+        /// </summary>
         public NameValueCollection QueryParameters { get; internal set; }
     }
 }

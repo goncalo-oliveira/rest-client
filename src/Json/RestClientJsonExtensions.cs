@@ -3,78 +3,67 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Faactory.RestClient.Json;
 
 namespace Faactory.RestClient
 {
+    /// <summary>
+    /// JSON extensions for the RestClient instance
+    /// </summary>
     public static class RestClientJsonExtensions
     {
-        internal static System.Text.Json.JsonSerializerOptions serializerOptions = new System.Text.Json.JsonSerializerOptions
-        {
-            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
-        };
-
+        /// <summary>
+        /// Sends a GET request to the specified resource location
+        /// </summary>
+        /// <param name="url">The resource location</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         public static async Task<RestObjectResponse<T>> GetJsonAsync<T>( this RestClient client, string url, CancellationToken cancellationToken = default )
         {
             var response = await client.GetAsync( url, cancellationToken );
 
-            return CreateObjectResponse<T>( response );
+            return RestObjectResponse<T>.Create( response );
         }
 
-        public static async Task<RestObjectResponse<T>> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        /// <summary>
+        /// Sends a POST request to the specified resource location
+        /// </summary>
+        /// <param name="url">The resource location</param>
+        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
+        /// <typeparam name="T">The value type</typeparam>
+        public static Task<RestResponse> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = CreateJsonContent( value );
-            var response = await client.PostAsync( url, content, cancellationToken );
-
-            return CreateObjectResponse<T>( response );
+            var content = client.JsonSerializer.SerializeObject( value );
+            
+            return client.PostAsync( url, content, cancellationToken );
         }
 
-        public static async Task<RestObjectResponse<T>> PutJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        /// <summary>
+        /// Sends a PUT request to the specified resource location
+        /// </summary>
+        /// <param name="url">The resource location</param>
+        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
+        /// <typeparam name="T">The value type</typeparam>
+        public static Task<RestResponse> PutJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = CreateJsonContent( value );
-            var response = await client.PutAsync( url, content, cancellationToken );
+            var content = client.JsonSerializer.SerializeObject( value );
 
-            return CreateObjectResponse<T>( response );
+            return client.PutAsync( url, content, cancellationToken );
         }
 
-        public static async Task<RestObjectResponse<T>> PatchJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        /// <summary>
+        /// Sends a PATCH request to the specified resource location
+        /// </summary>
+        /// <param name="url">The resource location</param>
+        /// <param name="value">The value to serialize into the request body</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
+        /// <typeparam name="T">The value type</typeparam>
+        public static Task<RestResponse> PatchJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = CreateJsonContent( value );
-            var response = await client.PatchAsync( url, content, cancellationToken );
+            var content = client.JsonSerializer.SerializeObject( value );
 
-            return CreateObjectResponse<T>( response );
-        }
-
-        internal static JsonContent CreateJsonContent<T>( T value )
-        {
-            // TODO: add support for Newtonsoft
-            var json = System.Text.Json.JsonSerializer.Serialize( value, serializerOptions );
-
-            return new JsonContent( json );
-        }
-
-        internal static RestObjectResponse<T> CreateObjectResponse<T>( RestResponse response )
-        {
-            var restResponse = new RestObjectResponse<T>
-            {
-                StatusCode = response.StatusCode,
-                Headers = response.Headers
-            };
-
-            if ( restResponse.StatusCode == 200 )
-            {
-                try
-                {
-                    // TODO: add support for Newtonsoft
-                    restResponse.Content = System.Text.Json.JsonSerializer.Deserialize<T>( response.Content, serializerOptions );
-                }
-                catch
-                {
-                    // we are ignoring deserialization errors and returning null
-                }
-            }
-
-            return ( restResponse );
+            return client.PatchAsync( url, content, cancellationToken );
         }
     }
 }
