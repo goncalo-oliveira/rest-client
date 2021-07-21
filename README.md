@@ -7,7 +7,7 @@ This projects contains the implementation for a REST Client for .NET. It's built
 Install the package.
 
 ```shell
-$ todo
+$ dotnet add package Faactory.RestClient
 ```
 
 To create a client instance using dependency injection
