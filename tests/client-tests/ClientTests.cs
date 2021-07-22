@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Faactory.RestClient;
-using Faactory.RestClient.Json;
 using Xunit;
 
 namespace Faactory.RestClient.Tests
