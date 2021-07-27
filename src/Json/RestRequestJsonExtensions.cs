@@ -43,9 +43,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PostJsonAsync<T>( this RestRequest request, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PostAsync( content, cancellationToken );
+            return request.PostAsync( new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PostJsonAsync<T>( this RestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PostAsync( url, content, cancellationToken );
+            return request.PostAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PutJsonAsync<T>( this RestRequest request, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PutAsync( content, cancellationToken );
+            return request.PutAsync( new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -84,9 +84,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PutJsonAsync<T>( this RestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PutAsync( url, content, cancellationToken );
+            return request.PutAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PatchJsonAsync<T>( this RestRequest request, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PatchAsync( content, cancellationToken );
+            return request.PatchAsync( new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PatchJsonAsync<T>( this RestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = request.Client.JsonSerializer.SerializeObject( value );
+            var content = request.Client.Serializer.Serialize( value );
 
-            return request.PatchAsync( url, content, cancellationToken );
+            return request.PatchAsync( url, new JsonContent( content ), cancellationToken );
         }
     }
 }

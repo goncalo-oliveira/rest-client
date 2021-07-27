@@ -10,14 +10,14 @@ namespace Faactory.RestClient
     /// </summary>
     public sealed class RestClient
     {
-        public RestClient( HttpClient baseHttpClient, Json.IJsonSerializer jsonSerializer = null )
+        public RestClient( HttpClient baseHttpClient, ISerializer contentSerializer = null )
         {
             HttpClient = baseHttpClient;
-            JsonSerializer = jsonSerializer ?? new Json.DefaultJsonSerializer();
+            Serializer = contentSerializer ?? new Json.DefaultJsonSerializer();
         }
 
-        public RestClient( HttpClient baseHttpClient, string baseUrl, Json.IJsonSerializer jsonSerializer = null )
-            : this( baseHttpClient, jsonSerializer )
+        public RestClient( HttpClient baseHttpClient, string baseUrl, ISerializer contentSerializer = null )
+            : this( baseHttpClient, contentSerializer )
         {
             HttpClient.BaseAddress = new Uri( baseUrl.TrimEnd( '/' ) );
         }
@@ -27,7 +27,7 @@ namespace Faactory.RestClient
         /// </summary>
         public HttpClient HttpClient { get; }
 
-        internal Json.IJsonSerializer JsonSerializer { get; }
+        internal ISerializer Serializer { get; }
 
         /// <summary>
         /// Sends a GET request to the specified resource location
@@ -95,7 +95,7 @@ namespace Faactory.RestClient
 
             var restResponse = new RestResponse
             {
-                JsonSerializer = JsonSerializer,
+                Serializer = Serializer,
                 StatusCode = (int)httpResponse.StatusCode,
                 Headers = httpResponse.Headers
             };

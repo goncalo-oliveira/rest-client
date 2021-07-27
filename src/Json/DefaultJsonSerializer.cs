@@ -1,8 +1,9 @@
 using System;
+using System.Text;
 
 namespace Faactory.RestClient.Json
 {
-    internal class DefaultJsonSerializer : IJsonSerializer
+    internal class DefaultJsonSerializer : ISerializer
     {
         private static readonly System.Text.Json.JsonSerializerOptions serializerOptions = new System.Text.Json.JsonSerializerOptions
         {
@@ -10,14 +11,14 @@ namespace Faactory.RestClient.Json
             PropertyNameCaseInsensitive = true
         };
 
-        public JsonContent SerializeObject<T>( T value )
+        public byte[] Serialize<T>( T value )
         {
             var json = System.Text.Json.JsonSerializer.Serialize( value, serializerOptions );
 
-            return new JsonContent( json );
+            return Encoding.UTF8.GetBytes( json );
         }
         
-        public T DeserializeObject<T>( byte[] content )
+        public T Deserialize<T>( byte[] content )
             => System.Text.Json.JsonSerializer.Deserialize<T>( content, serializerOptions );
     }
 }

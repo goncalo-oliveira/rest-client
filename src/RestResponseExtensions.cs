@@ -114,5 +114,42 @@ namespace Faactory.RestClient
         /// <returns>True if the response status code is a server error, false otherwise</returns>
         public static bool IsServerError( this IRestResponse response )
             => ( response.StatusCode >= 500 ) && ( response.StatusCode <= 599 );
+
+        /// <summary>
+        /// Deserializes the response content into an object using the default serializer
+        /// </summary>
+        /// <param name="response">The response to deserialize the content from</param>
+        /// <typeparam name="T">The type of the object to deserialize to</typeparam>
+        /// <returns>A deserialized object instance</returns>
+        public static T Deserialize<T>( this RestResponse response )
+        {
+            return Deserialize<T>( response, response.Serializer );
+        }
+
+        /// <summary>
+        /// Deserializes the response content into an object using the given serializer
+        /// </summary>
+        /// <param name="response">The response to deserialize the content from</param>
+        /// <param name="serializer">The content serializer to use for deserialization</param>
+        /// <typeparam name="T">The type of the object to deserialize to</typeparam>
+        /// <returns>A deserialized object instance</returns>
+        public static T Deserialize<T>( this RestResponse response, ISerializer serializer )
+        {
+            if ( ( response.Content == null ) || ( response.Content.Length == 0 ) )
+            {
+                // no content
+                return default( T );
+            }
+
+            try
+            {
+                return serializer.Deserialize<T>( response.Content );
+            }
+            catch
+            {
+                // we are ignoring deserialization errors and returning null
+                return default( T );
+            }
+        }
     }
 }

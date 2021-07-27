@@ -30,6 +30,6 @@ namespace Faactory.RestClient
         /// </summary>
         public byte[] Content { get; internal set; }
 
-        internal Json.IJsonSerializer JsonSerializer { get; set; }
+        internal ISerializer Serializer { get; set; }
     }
 }

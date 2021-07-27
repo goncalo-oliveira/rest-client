@@ -17,12 +17,21 @@ IServiceCollection services = new ServiceCollection()
     ...
     .AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
     ...
+```
 
-var provider = services.BuildServiceProvider();
+This will give you access to an `IRestClientFactory` interface. Then, wherever you need a client
 
-var restClient = provider.GetService<IRestClientFactory>()
-    .CreateClient( "jsonplaceholder" );
+```csharp
+public class MyClass
+{
+    private readonly RestClient client;
 
+    public MyClass( IRestClientFactory clientFactory )
+    {
+        client = clientFactory.CreateClient( "jsonplaceholder" );
+    }
+    ...
+}
 ```
 
 If creating the client manually, an `HttpClient` instance needs to be passed through
@@ -115,17 +124,21 @@ The client by default uses Microsoft's JSON serializer, therefore, there is limi
 If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
 
 ```csharp
-public class NewtonsoftJsonSerializer : IJsonSerializer
+public class NewtonsoftJsonSerializer : ISerializer
 {
-    public JsonContent SerializeObject<T>( T value )
+    public byte[] SerializeObject<T>( T value )
     {
         var json = JsonConvert.SerializeObject( value );
 
-        return new JsonContent( json );
+        return Encoding.UTF8.GetBytes( json );
     }
     
     public T DeserializeObject<T>( byte[] content )
-        => JsonConvert.DeserializeObject<T>( content );
+    {
+        var json = Encoding.UTF8.GetString( content );
+
+        return JsonConvert.DeserializeObject<T>( json );
+    }
 }
 ```
 
@@ -148,4 +161,14 @@ var restClient = new RestClient(
     httpClient,
     "https://jsonplaceholder.typicode.com",
     new NewtonsoftJsonSerializer() );
+```
+
+You can also pass a custom serializer if deserializing from a `RestResponse` instance
+
+```csharp
+var customSerializer = new NewtonsoftJsonSerializer();
+
+var response = await restClient.GetAsync( "todos/1" );
+
+var todo = response.Deserialize<Todo>( customSerializer );
 ```

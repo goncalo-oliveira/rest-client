@@ -42,7 +42,7 @@ namespace Faactory.RestClient.Json
             {
                 try
                 {
-                    restResponse.Content = response.JsonSerializer.DeserializeObject<T>( response.Content );
+                    restResponse.Content = response.Serializer.Deserialize<T>( response.Content );
                 }
                 catch
                 {

@@ -34,9 +34,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = client.JsonSerializer.SerializeObject( value );
+            var content = client.Serializer.Serialize( value );
             
-            return client.PostAsync( url, content, cancellationToken );
+            return client.PostAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PutJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = client.JsonSerializer.SerializeObject( value );
+            var content = client.Serializer.Serialize( value );
 
-            return client.PutAsync( url, content, cancellationToken );
+            return client.PutAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to serialize</typeparam>
         public static Task<RestResponse> PatchJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
-            var content = client.JsonSerializer.SerializeObject( value );
+            var content = client.Serializer.Serialize( value );
 
-            return client.PatchAsync( url, content, cancellationToken );
+            return client.PatchAsync( url, new JsonContent( content ), cancellationToken );
         }
     }
 }

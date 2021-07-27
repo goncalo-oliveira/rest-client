@@ -6,24 +6,24 @@ namespace Faactory.RestClient
     internal class RestClientFactory : IRestClientFactory
     {
         private readonly IHttpClientFactory httpClientFactory;
-        private readonly Json.IJsonSerializer jsonSerializer;
+        private readonly ISerializer serializer;
 
-        public RestClientFactory( IHttpClientFactory httpClientFactory, Json.IJsonSerializer jsonSerializer = null )
+        public RestClientFactory( IHttpClientFactory httpClientFactory, ISerializer serializer = null )
         {
             this.httpClientFactory = httpClientFactory;
-            this.jsonSerializer = jsonSerializer;
+            this.serializer = serializer;
         }
 
         public RestClient CreateClient()
         {
-            return new RestClient( httpClientFactory.CreateClient(), jsonSerializer );
+            return new RestClient( httpClientFactory.CreateClient(), serializer );
         }
 
         public RestClient CreateClient( string name )
         {
             var httpClient = httpClientFactory.CreateClient( name );
 
-            return new RestClient( httpClient, jsonSerializer );
+            return new RestClient( httpClient, serializer );
         }
     }
 }
