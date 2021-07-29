@@ -26,6 +26,8 @@ namespace Faactory.RestClient
         /// </summary>
         public RestClient Client { get; }
 
+        public System.Net.Http.Headers.HttpRequestHeaders Headers => options.Headers;
+
         /// <summary>
         /// Sends a GET request to the pre-configured resource location
         /// </summary>

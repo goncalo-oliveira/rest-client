@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +21,11 @@ namespace Faactory.RestClient
         /// <typeparam name="T">The type of the object to deserialize to</typeparam>
         public static async Task<RestObjectResponse<T>> GetJsonAsync<T>( this RestClient client, string url, CancellationToken cancellationToken = default )
         {
-            var response = await client.GetAsync( url, cancellationToken );
+            var response = await client.Configure( options =>
+            {
+                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+            } )
+            .GetAsync( url, cancellationToken );
 
             return RestObjectResponse<T>.Create( response );
         }
@@ -35,8 +40,12 @@ namespace Faactory.RestClient
         public static Task<RestResponse> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.Serializer.Serialize( value );
-            
-            return client.PostAsync( url, new JsonContent( content ), cancellationToken );
+
+            return client.Configure( options =>
+            {
+                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+            } )
+            .PostAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -50,7 +59,11 @@ namespace Faactory.RestClient
         {
             var content = client.Serializer.Serialize( value );
 
-            return client.PutAsync( url, new JsonContent( content ), cancellationToken );
+            return client.Configure( options =>
+            {
+                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+            } )
+            .PutAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -64,7 +77,11 @@ namespace Faactory.RestClient
         {
             var content = client.Serializer.Serialize( value );
 
-            return client.PatchAsync( url, new JsonContent( content ), cancellationToken );
+            return client.Configure( options =>
+            {
+                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+            } )
+            .PatchAsync( url, new JsonContent( content ), cancellationToken );
         }
     }
 }
