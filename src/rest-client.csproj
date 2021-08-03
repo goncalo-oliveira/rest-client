@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Faactory.RestClient</RootNamespace>
     <PackageId>Faactory.RestClient</PackageId>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
     <Authors>Goncalo Oliveira</Authors>
     <Description>REST Client for .NET</Description>
     <RepositoryUrl>https://github.com/goncalo-oliveira/rest-client</RepositoryUrl>

@@ -9,6 +9,14 @@ namespace Faactory.RestClient.Tests
         public void ConfigureServices( IServiceCollection services )
         {
             services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" );
+            services.AddRestClient( "jsonplaceholder-basicauth", "https://jsonplaceholder.typicode.com", httpClient =>
+            {
+                httpClient.AddBasicAuthentication( AuthorizationTests.username, AuthorizationTests.password );
+            } );
+            services.AddRestClient( "jsonplaceholder-bearertoken", "https://jsonplaceholder.typicode.com", httpClient =>
+            {
+                httpClient.AddBearerToken( AuthorizationTests.bearerToken );
+            } );
         }
     }
 }

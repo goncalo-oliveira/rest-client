@@ -172,3 +172,46 @@ var response = await restClient.GetAsync( "todos/1" );
 
 var todo = response.Deserialize<Todo>( customSerializer );
 ```
+
+## Authorization header
+
+Since version `0.1.4` you can use the extensions to configure the `Authorization` header. Currently, the supported schemes are
+
+- Basic authentication
+- Bearer token
+
+This can be applied either to the entire client, when configuring the underlying `HttpClient` instance with dependency injection
+
+```csharp
+IServiceCollection services = new ServiceCollection()
+    ...
+    .AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com", httpClient =>
+    {
+        options.AddBasicAuthentication( "username", "password" );
+    } )
+    ...
+```
+
+When manually creating the client instance, by accessing the underlying client extensions
+
+```csharp
+var httpClient = ...
+
+httpClient.AddBasicAuthentication( "username", "password" );
+
+var restClient = new RestClient( httpClient, "https://jsonplaceholder.typicode.com" );
+
+// accessing the underlying client instance works the same
+// restClient.HttpClient.AddBasicAuthentication( "username", "password" );
+
+```
+
+Or when customizing/scoping a request
+
+```csharp
+var response = await restClient.Configure( "users", options =>
+{
+    options.AddBasicAuthentication( "username", "password" );
+})
+.GetAsync();
+```
