@@ -215,3 +215,5 @@ var response = await restClient.Configure( "users", options =>
 })
 .GetAsync();
 ```
+
+> Note: These extensions require adding the namespace `Faactory.RestClient`
