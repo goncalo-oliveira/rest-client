@@ -39,7 +39,7 @@ namespace Faactory.RestClient
         /// <param name="schema">The schema data</param>
         public static RestRequestOptions SchemaInclude( this RestRequestOptions options, object schema )
         {
-            AddSchemaHeader( options, schemaMap, schema );
+            AddSchemaHeader( options, schemaInclude, schema );
 
             return ( options );
         }

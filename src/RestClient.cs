@@ -97,7 +97,8 @@ namespace Faactory.RestClient
             {
                 Serializer = Serializer,
                 StatusCode = (int)httpResponse.StatusCode,
-                Headers = httpResponse.Headers
+                Headers = httpResponse.Headers,
+                ContentType = httpResponse.Content.Headers.ContentType.MediaType
             };
 
             try

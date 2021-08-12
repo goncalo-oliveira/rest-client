@@ -20,6 +20,7 @@ namespace Faactory.RestClient
     /// <typeparam name="T">The type of the content</typeparam>
     public interface IRestResponse<T> : IRestResponse
     {
+        string ContentType { get; }
         T Content { get; }
     }
 }

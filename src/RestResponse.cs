@@ -26,6 +26,11 @@ namespace Faactory.RestClient
         public int StatusCode { get; internal set; }
 
         /// <summary>
+        /// Gets the response content type
+        /// </summary>
+        public string ContentType { get; internal set; }
+
+        /// <summary>
         /// Gets the response content as a byte array
         /// </summary>
         public byte[] Content { get; internal set; }

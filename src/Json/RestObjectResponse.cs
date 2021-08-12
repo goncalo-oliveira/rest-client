@@ -25,6 +25,11 @@ namespace Faactory.RestClient.Json
         public int StatusCode { get; internal set; }
 
         /// <summary>
+        /// Gets the response content type
+        /// </summary>
+        public string ContentType { get; internal set; }
+
+        /// <summary>
         /// Gets the response content as a typed object
         /// </summary>
         public T Content { get; internal set; }
@@ -34,7 +39,8 @@ namespace Faactory.RestClient.Json
             var restResponse = new RestObjectResponse<T>
             {
                 StatusCode = response.StatusCode,
-                Headers = response.Headers
+                Headers = response.Headers,
+                ContentType = response.ContentType
             };
 
             // only deserialize if the response is a 200 OK
