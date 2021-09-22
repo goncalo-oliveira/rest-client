@@ -56,9 +56,9 @@ if ( response.IsOk() )
 
 ## Customization and Scoping
 
-It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure the headers, or the query parameters. This method returns a `RestRequest` instance.
+It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure the headers, or the query parameters. The method returns a `RestRequest` instance.
 
->Note: If we create a scoped request and then invoke the operation with a url, the latter overrides the scoped url.
+>Note: If we create a scoped request and then invoke the operation with an url, the latter overrides the scoped url.
 
 Here's an example of a scoped request
 
