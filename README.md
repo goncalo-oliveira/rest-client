@@ -56,7 +56,7 @@ if ( response.IsOk() )
 
 ## Customization and Scoping
 
-It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure not only the headers, but also other things, such as query parameters. This method returns a `RestRequest` instance (this instance is reusable).
+It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure the headers, or the query parameters. This method returns a `RestRequest` instance.
 
 >Note: If we create a scoped request and then invoke the operation with a url, the latter overrides the scoped url.
 
@@ -80,7 +80,7 @@ var response = await restClient.Configure( options =>
 .GetAsync( "users" );
 ```
 
-Both scoped and non-scoped request instances are reusable and multiple operations can be performed with the same request instance.
+Both scoped and non-scoped request instances are reusable and multiple operations can be performed with the same instance.
 Here's an example on reusing a non-scoped request.
 
 ```csharp
@@ -119,7 +119,7 @@ In both scenarios you will have access to the response status code and headers.
 
 ## Polymorphic JSON Serialization
 
-The client by default uses Microsoft's JSON serializer, therefore, there is limited support for polymorphic serialization and deserialization is not supported at all. You can find more in [this article](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism) where you will also find a few workarounds, including writing a custom converter.
+By default, the client uses Microsoft's JSON serializer, therefore, there is limited support for polymorphic serialization and deserialization is not supported at all. You can find more information in [this article](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism) where you will also find a few workarounds, including writing a custom converter.
 
 If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
 
@@ -175,12 +175,12 @@ var todo = response.Deserialize<Todo>( customSerializer );
 
 ## Authorization header
 
-Since version `0.1.4` you can use the extensions to configure the `Authorization` header. Currently, the supported schemes are
+Since version `0.1.4` you can use extensions to configure the `Authorization` header. Currently, the supported schemes are
 
 - Basic authentication
 - Bearer token
 
-This can be applied either to the entire client, when configuring the underlying `HttpClient` instance with dependency injection
+This can be applied to the entire client, when configuring the underlying `HttpClient` instance with dependency injection
 
 ```csharp
 IServiceCollection services = new ServiceCollection()
@@ -192,7 +192,7 @@ IServiceCollection services = new ServiceCollection()
     ...
 ```
 
-When manually creating the client instance, by accessing the underlying client extensions
+when manually creating the client instance, by accessing the underlying client extensions
 
 ```csharp
 var httpClient = ...
@@ -206,7 +206,7 @@ var restClient = new RestClient( httpClient, "https://jsonplaceholder.typicode.c
 
 ```
 
-Or when customizing/scoping a request
+or when customizing/scoping a request
 
 ```csharp
 var response = await restClient.Configure( "users", options =>
@@ -217,3 +217,36 @@ var response = await restClient.Configure( "users", options =>
 ```
 
 > Note: These extensions require adding the namespace `Faactory.RestClient`
+
+## EXPERIMENTAL: REST-Schema Extensions
+
+If you are working with an API that is compatible with (REST-Schema)[https://github.com/goncalo-oliveira/rest-schema-spec], there are a few extensions that you can use. These are experimental features, so they might change in the future, disappear or not function properly.
+
+We can send a map schema spec through the headers by customizing a request with the available extensions.
+
+```csharp
+var response = await restClient.Configure( "users", options =>
+{
+    options.SchemaMap( new {
+        spec = new {
+            _ = new string[] { "id", "name", "email", "address" },
+            address = new string[] { "street", "city", "zipcode" }
+        }
+    } );
+})
+.GetAsync();
+```
+
+Similarly we can send an include schema spec.
+
+```csharp
+var response = await restClient.Configure( "users", options =>
+{
+    options.SchemaInclude( new {
+        spec = new {
+            _ = new string[] { "address" }
+        }
+    } );
+})
+.GetAsync();
+```
