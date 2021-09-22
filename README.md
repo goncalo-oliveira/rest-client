@@ -220,7 +220,7 @@ var response = await restClient.Configure( "users", options =>
 
 ## EXPERIMENTAL: REST-Schema Extensions
 
-If you are working with an API that is compatible with (REST-Schema)[https://github.com/goncalo-oliveira/rest-schema-spec], there are a few extensions that you can use. These are experimental features, so they might change in the future, disappear or not function properly.
+If you are working with an API that is compatible with [REST-Schema](https://github.com/goncalo-oliveira/rest-schema-spec), there are a few extensions that you can use. These are experimental features, so they might change in the future, disappear or not function properly.
 
 We can send a map schema spec through the headers by customizing a request with the available extensions.
 
