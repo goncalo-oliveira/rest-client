@@ -35,6 +35,11 @@ namespace Faactory.RestClient
         /// </summary>
         public byte[] Content { get; internal set; }
 
+        /// <summary>
+        /// Gets the duration of the request
+        /// </summary>
+        public TimeSpan Duration { get; internal set; }
+
         internal ISerializer Serializer { get; set; }
     }
 }

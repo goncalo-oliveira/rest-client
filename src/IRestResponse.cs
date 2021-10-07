@@ -12,6 +12,8 @@ namespace Faactory.RestClient
     {
         System.Net.Http.Headers.HttpResponseHeaders Headers { get; }
         int StatusCode { get; }
+
+        TimeSpan Duration { get; }
     }
 
     /// <summary>

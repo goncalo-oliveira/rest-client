@@ -34,13 +34,19 @@ namespace Faactory.RestClient.Json
         /// </summary>
         public T Content { get; internal set; }
 
+        /// <summary>
+        /// Gets the duration of the request
+        /// </summary>
+        public TimeSpan Duration { get; internal set; }
+
         internal static RestObjectResponse<T> Create( RestResponse response )
         {
             var restResponse = new RestObjectResponse<T>
             {
                 StatusCode = response.StatusCode,
                 Headers = response.Headers,
-                ContentType = response.ContentType
+                ContentType = response.ContentType,
+                Duration = response.Duration
             };
 
             // only deserialize if the response is a 200 OK

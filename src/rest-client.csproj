@@ -4,11 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Faactory.RestClient</RootNamespace>
     <PackageId>Faactory.RestClient</PackageId>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <Authors>Goncalo Oliveira</Authors>
     <Description>REST Client for .NET</Description>
     <RepositoryUrl>https://github.com/goncalo-oliveira/rest-client</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>faactory.png</PackageIcon>
   </PropertyGroup>
 
@@ -19,6 +20,7 @@
 
   <ItemGroup>
     <None Include="../faactory.png" Pack="true" PackagePath="/"/>
+    <None Include="../README.md" Pack="true" PackagePath="/"/>
   </ItemGroup>
 
 </Project>

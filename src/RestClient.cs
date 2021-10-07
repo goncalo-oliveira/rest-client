@@ -86,7 +86,10 @@ namespace Faactory.RestClient
 
             configure?.Invoke( message );
 
+            var chrono = System.Diagnostics.Stopwatch.StartNew();
             var httpResponse = await HttpClient.SendAsync( message, cancellationToken );
+            
+            chrono.Stop();
 
             if ( cancellationToken.IsCancellationRequested )
             {
@@ -98,7 +101,8 @@ namespace Faactory.RestClient
                 Serializer = Serializer,
                 StatusCode = (int)httpResponse.StatusCode,
                 Headers = httpResponse.Headers,
-                ContentType = httpResponse.Content?.Headers.ContentType?.MediaType
+                ContentType = httpResponse.Content?.Headers.ContentType?.MediaType,
+                Duration = chrono.Elapsed
             };
 
             try
