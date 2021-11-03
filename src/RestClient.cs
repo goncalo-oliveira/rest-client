@@ -19,7 +19,9 @@ namespace Faactory.RestClient
         public RestClient( HttpClient baseHttpClient, string baseUrl, ISerializer contentSerializer = null )
             : this( baseHttpClient, contentSerializer )
         {
-            HttpClient.BaseAddress = new Uri( baseUrl.TrimEnd( '/' ) );
+            HttpClient.BaseAddress = new UriBuilder( baseUrl )
+                .EnsurePathTrailingSlash()
+                .Uri;
         }
 
         /// <summary>

@@ -35,7 +35,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddRestClientFactory();
             services.AddHttpClient( name, httpClient =>
             {
-                httpClient.BaseAddress = new Uri( url.TrimEnd( '/' ) );
+                httpClient.BaseAddress = new UriBuilder( url )
+                    .EnsurePathTrailingSlash()
+                    .Uri;
             } );
 
             return new RestClientBuilder( services );
@@ -67,7 +69,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddRestClientFactory();
             services.AddHttpClient( name, httpClient =>
             {
-                httpClient.BaseAddress = new Uri( url.TrimEnd( '/' ) );
+                httpClient.BaseAddress = new UriBuilder( url )
+                    .EnsurePathTrailingSlash()
+                    .Uri;
 
                 configureClient?.Invoke( httpClient );
             } );
