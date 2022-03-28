@@ -47,6 +47,18 @@ namespace Faactory.RestClient.Tests
         }
 
         [Fact]
+        public async Task TestGetTodoJsonContent()
+        {
+            var todo = await client.GetJsonAsync<Todo>( "todos/1" ).GetContentAsync();
+
+            Assert.NotNull( todo );
+
+            Assert.Equal( 1, todo.Id );
+            Assert.Equal( 1, todo.UserId );
+            Assert.Equal( "delectus aut autem", todo.Title );
+        }
+
+        [Fact]
         public async Task TestDeleteTodo()
         {
             var response = await client.DeleteAsync( "todos/1" );

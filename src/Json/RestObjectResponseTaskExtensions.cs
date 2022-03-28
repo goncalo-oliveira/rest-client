@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Faactory.RestClient;
 using Faactory.RestClient.Json;
 
-internal static class RestObjectResponseTaskExtensions
+namespace Faactory.RestClient;
+
+public static class RestObjectResponseTaskExtensions
 {
     /// <summary>
     /// Retrieves the response content if the status code is 200 (OK)
