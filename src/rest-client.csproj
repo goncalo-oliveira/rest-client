@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Faactory.RestClient</RootNamespace>
     <PackageId>Faactory.RestClient</PackageId>
-    <Version>0.1.8</Version>
+    <Version>0.2.0</Version>
     <Authors>Goncalo Oliveira</Authors>
     <Description>REST Client for .NET</Description>
     <RepositoryUrl>https://github.com/goncalo-oliveira/rest-client</RepositoryUrl>
@@ -14,13 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../faactory.png" Pack="true" PackagePath="/"/>
-    <None Include="../README.md" Pack="true" PackagePath="/"/>
+    <None Include="../faactory.png" Pack="true" PackagePath="/" />
+    <None Include="../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>

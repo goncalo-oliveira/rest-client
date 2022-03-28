@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Faactory.RestClient;
-using Faactory.RestClient.Json;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection

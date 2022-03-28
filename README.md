@@ -117,6 +117,12 @@ var todo = response.Content;
 
 In both scenarios you will have access to the response status code and headers.
 
+When doing a `GET` request with a JSON extension, if you're not interested in the response status or headers, you can *bypass* it and get the content only. If the response status code is not a 200 (OK), the content returned will be `default<T>`.
+
+```csharp
+var todo = await restClient.GetJsonAsync<Todo>( "todos/1" ).GetContentAsync();
+```
+
 ## Polymorphic JSON Serialization
 
 By default, the client uses Microsoft's JSON serializer, therefore, there is limited support for polymorphic serialization and deserialization is not supported at all. You can find more information in [this article](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism) where you will also find a few workarounds, including writing a custom converter.
