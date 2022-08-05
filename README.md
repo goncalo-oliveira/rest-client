@@ -54,17 +54,17 @@ if ( response.IsOk() )
 }
 ```
 
-## Configuring and Scoping
+## Configuring
 
-It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns a new instance.
+It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns an `IRestRequest` instance.
 
 ```csharp
-IRestClient configured = restClient.Configure( options =>
+IRestRequest request = restClient.Configure( options =>
 {
     options.QueryParameters.Add( "address.city", "Bartholomebury" );
 } );
 
-var response = configured.GetAsync( "users" );
+var response = request.GetAsync( "users" );
 
 // or directly with a fluent syntax
 
@@ -75,28 +75,7 @@ var response = await restClient.Configure( options =>
 .GetAsync( "users" );
 ```
 
-It is also possible to scope the request with the path to the resource while configuring a request. To do that, we invoke the `Configure` with the path and the configuration method. This will return an `IRestRequest` instead of an `IRestClient`.
-
-```csharp
-IRestRequest scoped = restClient.Configure( "users", options =>
-{
-    options.QueryParameters.Add( "address.city", "Bartholomebury" );
-} );
-
-var response = scoped.GetAsync();
-
-// or directly with a fluent syntax
-
-var response = await restClient.Configure( "users", options =>
-{
-    options.QueryParameters.Add( "address.city", "Bartholomebury" );
-})
-.GetAsync();
-```
-
-> You will notice that `IRestRequest` operation methods don't take a path, since it was already defined with the configuration method.
-
-It's worth noting that both `IRestClient` and scoped `IRestRequest` instances are reusable and multiple operations can be performed with the same instance. Here's an example on reusing a non-scoped request.
+It's worth noting that `IRestRequest` instances are reusable and multiple operations can be performed with the same instance. Here's an example
 
 ```csharp
 var request = restClient.Configure( options =>

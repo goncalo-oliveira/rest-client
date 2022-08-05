@@ -9,16 +9,14 @@ namespace Faactory.RestClient;
 /// <summary>
 /// A pre-configured request
 /// </summary>
-internal sealed class RestRequest : IRestClient, IRestRequest
+internal sealed class RestRequest : IRestRequest
 {
-    private readonly string requestUrl;
     private readonly RestRequestOptions options;
 
-    internal RestRequest( IRestClient restClient, RestRequestOptions requestOptions, string url )
+    internal RestRequest( IRestClient restClient, RestRequestOptions requestOptions )
     {
         Client = restClient;
         options = requestOptions;
-        requestUrl = url;
     }
 
     /// <summary>
@@ -39,20 +37,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
         return ( this );
     }
 
-    IRestClient IRestClient.Configure(Action<RestRequestOptions> configure)
-    {
-        Configure( configure );
-
-        return ( this );
-    }
-
-    /// <summary>
-    /// Sends a GET request to the pre-configured resource location
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-    public Task<RestResponse> GetAsync( CancellationToken cancellationToken = default )
-        => Client.SendASync( Configure, HttpMethod.Get, requestUrl, null, cancellationToken );
-
     /// <summary>
     /// Sends a GET request to the specified resource location
     /// </summary>
@@ -60,14 +44,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
     /// <param name="cancellationToken">The cancellation token to cancel operation</param>
     public Task<RestResponse> GetAsync( string url, CancellationToken cancellationToken = default )
         => Client.SendASync( Configure, HttpMethod.Get, url, null, cancellationToken );
-
-    /// <summary>
-    /// Sends a POST request to the pre-configured resource location
-    /// </summary>
-    /// <param name="content">The request body content</param>
-    /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-    public Task<RestResponse> PostAsync( HttpContent content, CancellationToken cancellationToken = default )
-        => Client.SendASync( Configure, HttpMethod.Post, requestUrl, content, cancellationToken );
 
     /// <summary>
     /// Sends a POST request to the specified resource location
@@ -79,14 +55,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
         => Client.SendASync( Configure, HttpMethod.Post, url, content, cancellationToken );
 
     /// <summary>
-    /// Sends a PUT request to the pre-configured resource location
-    /// </summary>
-    /// <param name="content">The request body content</param>
-    /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-    public Task<RestResponse> PutAsync( HttpContent content, CancellationToken cancellationToken = default )
-        => Client.SendASync( Configure, HttpMethod.Put, requestUrl, content, cancellationToken );
-
-    /// <summary>
     /// Sends a PUT request to the specified resource location
     /// </summary>
     /// <param name="url">The resource location; overwrites pre-configured location</param>
@@ -96,14 +64,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
         => Client.SendASync( Configure, HttpMethod.Put, url, content, cancellationToken );
 
     /// <summary>
-    /// Sends a PATCH request to the pre-configured resource location
-    /// </summary>
-    /// <param name="content">The request body content</param>
-    /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-    public Task<RestResponse> PatchAsync( HttpContent content, CancellationToken cancellationToken = default )
-        => Client.SendASync( Configure, HttpMethod.Patch, requestUrl, content, cancellationToken );
-
-    /// <summary>
     /// Sends a PATCH request to the specified resource location
     /// </summary>
     /// <param name="url">The resource location; overwrites pre-configured location</param>
@@ -111,13 +71,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
     /// <param name="cancellationToken">The cancellation token to cancel operation</param>
     public Task<RestResponse> PatchAsync( string url, HttpContent content, CancellationToken cancellationToken = default )
         => Client.SendASync( Configure, HttpMethod.Patch, url, content, cancellationToken );
-
-    /// <summary>
-    /// Sends a DELETE request to the pre-configured resource location
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token to cancel operation</param>
-    public Task<RestResponse> DeleteAsync( CancellationToken cancellationToken = default )
-        => Client.SendASync( Configure, HttpMethod.Delete, requestUrl, null, cancellationToken );
 
     /// <summary>
     /// Sends a DELETE request to the specified resource location
@@ -132,20 +85,6 @@ internal sealed class RestRequest : IRestClient, IRestRequest
         if ( options.Headers.Any() )
         {
             message.Headers.CopyFrom( options.Headers );
-        }
-
-        // include additional query parameters (for specific/override location)
-        if ( string.IsNullOrEmpty( requestUrl ) && options.QueryParameters.HasKeys() )
-        {
-            var resourceUrl = ResourceUrl.FromUri( message.RequestUri );
-
-            // append/overwrite with configured query parameters
-            foreach ( var key in options.QueryParameters.AllKeys )
-            {
-                resourceUrl.QueryParameters.Set( key, options.QueryParameters[key] );
-            }
-
-            message.RequestUri = resourceUrl;
         }
     }
 }

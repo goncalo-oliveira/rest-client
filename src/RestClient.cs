@@ -31,7 +31,7 @@ public sealed class RestClient : IRestClient
 
     public ISerializer Serializer { get; }
 
-    public IRestClient Configure( Action<RestRequestOptions> configure )
+    public IRestRequest Configure( Action<RestRequestOptions> configure )
     {
         var options = new RestRequestOptions();
 
@@ -42,7 +42,7 @@ public sealed class RestClient : IRestClient
         configure?.Invoke( options );
 
         // create request
-        var request = new RestRequest( this, options, null );
+        var request = new RestRequest( this, options );
 
         return ( request );
     }

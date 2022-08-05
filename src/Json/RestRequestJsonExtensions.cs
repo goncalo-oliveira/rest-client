@@ -17,14 +17,14 @@ namespace Faactory.RestClient
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to deserialize to</typeparam>
         /// <returns>The response content if succeeded; default( T ) otherwise.</returns>
-        public static async Task<T> GetJsonAsync<T>( this IRestRequest request, CancellationToken cancellationToken = default )
+        public static async Task<T> GetJsonAsync<T>( this IRestRequest request, string url, CancellationToken cancellationToken = default )
         {
             request.Configure( options =>
             {
                 options.AddAcceptHeader( jsonMediaType );
             } );
 
-            var response = await request.GetAsync( cancellationToken );
+            var response = await request.GetAsync( url, cancellationToken );
 
             if ( response.StatusCode == 200 )
             {
@@ -32,8 +32,6 @@ namespace Faactory.RestClient
             }
 
             return default( T );
-
-            //return RestObjectResponse<T>.Create( response );
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PostJsonAsync<T>( this IRestRequest request, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PostJsonAsync<T>( this IRestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
             request.Configure( options =>
             {
@@ -51,7 +49,7 @@ namespace Faactory.RestClient
 
             var content = request.Client.Serializer.Serialize( value );
 
-            return request.PostAsync( new JsonContent( content ), cancellationToken );
+            return request.PostAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PutJsonAsync<T>( this IRestRequest request, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PutJsonAsync<T>( this IRestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
             request.Configure( options =>
             {
@@ -69,7 +67,7 @@ namespace Faactory.RestClient
 
             var content = request.Client.Serializer.Serialize( value );
 
-            return request.PutAsync( new JsonContent( content ), cancellationToken );
+            return request.PutAsync( url, new JsonContent( content ), cancellationToken );
         }
 
         /// <summary>
@@ -78,7 +76,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PatchJsonAsync<T>( this IRestRequest request, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PatchJsonAsync<T>( this IRestRequest request, string url, T value, CancellationToken cancellationToken = default )
         {
             request.Configure( options =>
             {
@@ -87,7 +85,7 @@ namespace Faactory.RestClient
 
             var content = request.Client.Serializer.Serialize( value );
 
-            return request.PatchAsync( new JsonContent( content ), cancellationToken );
+            return request.PatchAsync( url, new JsonContent( content ), cancellationToken );
         }
     }
 }
