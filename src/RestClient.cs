@@ -95,6 +95,8 @@ namespace Faactory.RestClient
 
             if ( cancellationToken.IsCancellationRequested )
             {
+                httpResponse.Dispose();
+
                 return ( RestResponse.Empty );
             }
 
@@ -111,7 +113,10 @@ namespace Faactory.RestClient
             {
                 restResponse.Content = await httpResponse.Content.ReadAsByteArrayAsync( cancellationToken );
             }
-            catch {}
+            finally
+            {
+                httpResponse.Dispose();
+            }
 
             return ( restResponse );
         }
