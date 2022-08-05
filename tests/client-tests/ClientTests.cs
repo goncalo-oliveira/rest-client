@@ -7,7 +7,7 @@ namespace Faactory.RestClient.Tests
 {
     public class ClientTests
     {
-        private readonly RestClient client;
+        private readonly IRestClient client;
 
         public ClientTests( IRestClientFactory clientFactory )
         {

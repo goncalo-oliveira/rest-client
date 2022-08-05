@@ -19,7 +19,7 @@ namespace Faactory.RestClient
         /// <param name="url">The resource location</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to deserialize to</typeparam>
-        public static async Task<RestObjectResponse<T>> GetJsonAsync<T>( this RestClient client, string url, CancellationToken cancellationToken = default )
+        public static async Task<RestObjectResponse<T>> GetJsonAsync<T>( this IRestClient client, string url, CancellationToken cancellationToken = default )
         {
             var response = await client.Configure( options =>
             {
@@ -37,7 +37,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PostJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PostJsonAsync<T>( this IRestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.Serializer.Serialize( value );
 
@@ -55,7 +55,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PutJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PutJsonAsync<T>( this IRestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.Serializer.Serialize( value );
 
@@ -73,7 +73,7 @@ namespace Faactory.RestClient
         /// <param name="value">The object to serialize as JSON</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to serialize</typeparam>
-        public static Task<RestResponse> PatchJsonAsync<T>( this RestClient client, string url, T value, CancellationToken cancellationToken = default )
+        public static Task<RestResponse> PatchJsonAsync<T>( this IRestClient client, string url, T value, CancellationToken cancellationToken = default )
         {
             var content = client.Serializer.Serialize( value );
 

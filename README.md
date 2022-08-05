@@ -24,7 +24,7 @@ This will give you access to an `IRestClientFactory` interface. Then, wherever y
 ```csharp
 public class MyClass
 {
-    private readonly RestClient client;
+    private readonly IRestClient client;
 
     public MyClass( IRestClientFactory clientFactory )
     {
@@ -54,15 +54,39 @@ if ( response.IsOk() )
 }
 ```
 
-## Customization and Scoping
+## Configuring and Scoping
 
-It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure the headers, or the query parameters. The method returns a `RestRequest` instance.
-
->Note: If we create a scoped request and then invoke the operation with an url, the latter overrides the scoped url.
-
-Here's an example of a scoped request
+It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns a new instance.
 
 ```csharp
+IRestClient configured = restClient.Configure( options =>
+{
+    options.QueryParameters.Add( "address.city", "Bartholomebury" );
+} );
+
+var response = configured.GetAsync( "users" );
+
+// or directly with a fluent syntax
+
+var response = await restClient.Configure( options =>
+{
+    options.QueryParameters.Add( "address.city", "Bartholomebury" );
+})
+.GetAsync( "users" );
+```
+
+It is also possible to scope the request with the path to the resource while configuring a request. To do that, we invoke the `Configure` with the path and the configuration method. This will return an `IRestRequest` instead of an `IRestClient`.
+
+```csharp
+IRestRequest scoped = restClient.Configure( "users", options =>
+{
+    options.QueryParameters.Add( "address.city", "Bartholomebury" );
+} );
+
+var response = scoped.GetAsync();
+
+// or directly with a fluent syntax
+
 var response = await restClient.Configure( "users", options =>
 {
     options.QueryParameters.Add( "address.city", "Bartholomebury" );
@@ -70,18 +94,9 @@ var response = await restClient.Configure( "users", options =>
 .GetAsync();
 ```
 
-And another one of a non-scoped request
+> You will notice that `IRestRequest` operation methods don't take a path, since it was already defined with the configuration method.
 
-```csharp
-var response = await restClient.Configure( options =>
-{
-    options.Headers.Add( "X-Custom-Header", "custom header value" );
-})
-.GetAsync( "users" );
-```
-
-Both scoped and non-scoped request instances are reusable and multiple operations can be performed with the same instance.
-Here's an example on reusing a non-scoped request.
+It's worth noting that both `IRestClient` and scoped `IRestRequest` instances are reusable and multiple operations can be performed with the same instance. Here's an example on reusing a non-scoped request.
 
 ```csharp
 var request = restClient.Configure( options =>
@@ -193,7 +208,7 @@ IServiceCollection services = new ServiceCollection()
     ...
     .AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com", httpClient =>
     {
-        options.AddBasicAuthentication( "username", "password" );
+        httpClient.AddBasicAuthentication( "username", "password" );
     } )
     ...
 ```
