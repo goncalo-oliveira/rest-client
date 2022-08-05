@@ -122,20 +122,18 @@ var response = await restClient.GetAsync( "todos/1" );
 var todo = response.Deserialize<Todo>();
 ```
 
-Or requesting directly with the JSON extension, which returns a `RestObjectResponse` instead
+Or requesting directly with the JSON extension, which returns the deserialized instance instead; if the status code isn't 200, it returns `default<T>` instead. When requesting directly with the JSON extension, access to the response status and headers is lost.
 
 ```csharp
-var response = await restClient.GetJsonAsync<Todo>( "todos/1" );
-
-var todo = response.Content;
+var todo = await restClient.GetJsonAsync<Todo>( "todos/1" );
 ```
 
-In both scenarios you will have access to the response status code and headers.
-
-When doing a `GET` request with a JSON extension, if you're not interested in the response status or headers, you can *bypass* it and get the content only. If the response status code is not a 200 (OK), the content returned will be `default<T>`.
+For the other request operations, the response is always a `RestResponse`. For example, a POST request
 
 ```csharp
-var todo = await restClient.GetJsonAsync<Todo>( "todos/1" ).GetContentAsync();
+Todo todo = ...;
+
+var response = await restClient.PostJsonAsync( "todos", todo );
 ```
 
 ## Polymorphic JSON Serialization
@@ -196,7 +194,7 @@ var todo = response.Deserialize<Todo>( customSerializer );
 
 ## Authorization header
 
-Since version `0.1.4` you can use extensions to configure the `Authorization` header. Currently, the supported schemes are
+You can use extension methods to configure the `Authorization` header. Currently, the supported schemes are
 
 - Basic authentication
 - Bearer token
