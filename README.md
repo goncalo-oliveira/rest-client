@@ -122,7 +122,7 @@ var response = await restClient.GetAsync( "todos/1" );
 var todo = response.Deserialize<Todo>();
 ```
 
-Or directly with the request extension, which return the deserialized instance instead; be aware that this method will only deserialize the content if the status code is a 100 (Ok), otherwise it will return `default<T>`. Something else to consider is that this method doesn't give us access to the response's status code and headers.
+Or directly with the request extension, which returns the deserialized instance instead; be aware that this method will only deserialize the content if the response's status code is a 200 (Ok), otherwise it will return `default<T>`. Something else to consider is that this method doesn't give us access to the response's status code and headers.
 
 ```csharp
 var todo = await restClient.GetJsonAsync<Todo>( "todos/1" );
