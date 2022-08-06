@@ -9,7 +9,7 @@ namespace Faactory.RestClient;
 /// <summary>
 /// A pre-configured request
 /// </summary>
-internal sealed class RestRequest : IRestRequest
+internal sealed class RestRequest : IRestClient //IRestRequest
 {
     private readonly RestRequestOptions options;
 
@@ -30,7 +30,7 @@ internal sealed class RestRequest : IRestRequest
 
     public System.Net.Http.Headers.HttpRequestHeaders Headers => options.Headers;
 
-    public IRestRequest Configure( Action<RestRequestOptions> configure )
+    public IRestClient Configure( Action<RestRequestOptions> configure )
     {
         configure( options );
 

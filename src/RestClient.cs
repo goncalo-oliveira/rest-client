@@ -31,7 +31,7 @@ public sealed class RestClient : IRestClient
 
     public ISerializer Serializer { get; }
 
-    public IRestRequest Configure( Action<RestRequestOptions> configure )
+    public IRestClient Configure( Action<RestRequestOptions> configure )
     {
         var options = new RestRequestOptions();
 

@@ -43,7 +43,7 @@ var restClient = new RestClient( httpClient, "https://jsonplaceholder.typicode.c
 
 ## Using
 
-All request operations respond with a `RestResponse` or `RestObjectResponse`, containing the status code of the operation and the content, if any.
+All request operations respond with a `RestResponse`, containing the response's status code, headers and content, if any.
 
 ```csharp
 var response = await restClient.GetAsync( "todos/1" );
@@ -56,10 +56,10 @@ if ( response.IsOk() )
 
 ## Configuring
 
-It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns an `IRestRequest` instance.
+It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns a new instance.
 
 ```csharp
-IRestRequest request = restClient.Configure( options =>
+var request = restClient.Configure( options =>
 {
     options.QueryParameters.Add( "address.city", "Bartholomebury" );
 } );
@@ -75,7 +75,7 @@ var response = await restClient.Configure( options =>
 .GetAsync( "users" );
 ```
 
-It's worth noting that `IRestRequest` instances are reusable and multiple operations can be performed with the same instance. Here's an example
+> The instance returned by the `Configure` method is not the same as the original. It's also worth noting that the new instance is reusable and multiple operations can be performed with it. Here's an example
 
 ```csharp
 var request = restClient.Configure( options =>

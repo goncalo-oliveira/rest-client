@@ -34,7 +34,6 @@ namespace Faactory.RestClient
             }
 
             return default( T );
-            //return RestObjectResponse<T>.Create( response );
         }
 
         /// <summary>

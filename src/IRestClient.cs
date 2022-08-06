@@ -13,7 +13,7 @@ public interface IRestClient
     HttpClient HttpClient { get; }
     ISerializer Serializer { get; }
 
-    IRestRequest Configure( Action<RestRequestOptions> configure );
+    IRestClient Configure( Action<RestRequestOptions> configure );
 
     Task<RestResponse> GetAsync( string url, CancellationToken cancellationToken = default );
     Task<RestResponse> PostAsync( string url, HttpContent content, CancellationToken cancellationToken = default );
