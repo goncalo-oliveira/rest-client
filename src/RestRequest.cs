@@ -86,5 +86,19 @@ internal sealed class RestRequest : IRestClient
         {
             message.Headers.CopyFrom( options.Headers );
         }
+
+        // include additional query parameters (for specific/override location)
+        if ( options.QueryParameters.HasKeys() )
+        {
+            var resourceUrl = ResourceUrl.FromUri( message.RequestUri );
+
+            // append/overwrite with configured query parameters
+            foreach ( var key in options.QueryParameters.AllKeys )
+            {
+                resourceUrl.QueryParameters.Set( key, options.QueryParameters[key] );
+            }
+
+            message.RequestUri = resourceUrl;
+        }
     }
 }
