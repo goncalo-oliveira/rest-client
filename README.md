@@ -34,7 +34,7 @@ public class MyClass
 }
 ```
 
-If creating the client manually, an `HttpClient` instance needs to be passed through
+If you rather create a client instance manually, an `HttpClient` instance needs to be passed into the constructor
 
 ```csharp
 var httpClient = ...
@@ -54,20 +54,11 @@ if ( response.IsOk() )
 }
 ```
 
-## Configuring
+## Configuring per request
 
 It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns a new instance.
 
 ```csharp
-var request = restClient.Configure( options =>
-{
-    options.QueryParameters.Add( "address.city", "Bartholomebury" );
-} );
-
-var response = request.GetAsync( "users" );
-
-// or directly with a fluent syntax
-
 var response = await restClient.Configure( options =>
 {
     options.QueryParameters.Add( "address.city", "Bartholomebury" );
@@ -161,7 +152,7 @@ var restClient = new RestClient(
     new NewtonsoftJsonSerializer() );
 ```
 
-You can also pass a custom serializer if deserializing from a `RestResponse` instance
+You can also pass a custom serializer when deserializing from a `RestResponse` instance
 
 ```csharp
 var customSerializer = new NewtonsoftJsonSerializer();
