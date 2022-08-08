@@ -24,7 +24,7 @@ namespace Faactory.RestClient
         {
             var response = await client.Configure( options =>
             {
-                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+                options.AddAcceptHeader( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
             } )
             .GetAsync( url, cancellationToken );
 
@@ -49,7 +49,7 @@ namespace Faactory.RestClient
 
             return client.Configure( options =>
             {
-                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+                options.AddAcceptHeader( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
             } )
             .PostAsync( url, new JsonContent( content ), cancellationToken );
         }
@@ -67,7 +67,7 @@ namespace Faactory.RestClient
 
             return client.Configure( options =>
             {
-                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+                options.AddAcceptHeader( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
             } )
             .PutAsync( url, new JsonContent( content ), cancellationToken );
         }
@@ -85,7 +85,7 @@ namespace Faactory.RestClient
 
             return client.Configure( options =>
             {
-                options.Headers.Accept.Add( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
+                options.AddAcceptHeader( new MediaTypeWithQualityHeaderValue( JsonContent.JsonMediaType ) );
             } )
             .PatchAsync( url, new JsonContent( content ), cancellationToken );
         }

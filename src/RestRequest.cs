@@ -9,7 +9,7 @@ namespace Faactory.RestClient;
 /// <summary>
 /// A pre-configured request
 /// </summary>
-internal sealed class RestRequest : IRestClient //IRestRequest
+internal sealed class RestRequest : IRestClient
 {
     private readonly RestRequestOptions options;
 
