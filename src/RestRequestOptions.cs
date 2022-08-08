@@ -26,7 +26,7 @@ public sealed class RestRequestOptions
     /// </summary>
     public NameValueCollection QueryParameters { get; internal set; }
 
-    public void AddAcceptHeader( MediaTypeWithQualityHeaderValue value )
+    internal void AddAcceptHeader( MediaTypeWithQualityHeaderValue value )
     {
         if ( !Headers.Accept.Contains( value ) )
         {
