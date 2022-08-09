@@ -12,7 +12,7 @@ namespace Faactory.RestClient
         /// Creates and configures a RestClient instance using the default configuration
         /// </summary>
         /// <returns>A RestClient instance</returns>
-        RestClient CreateClient();
+        IRestClient CreateClient();
 
         /// <summary>
         /// Creates and configures a RestClient instance using the configuration
@@ -20,6 +20,6 @@ namespace Faactory.RestClient
         /// </summary>
         /// <param name="name">The logical name of the client to create</param>
         /// <returns>A RestClient instance</returns>
-        RestClient CreateClient( string name );
+        IRestClient CreateClient( string name );
     }
 }

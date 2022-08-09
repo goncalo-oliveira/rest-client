@@ -7,7 +7,7 @@ namespace Faactory.RestClient.Tests
 {
     public class ClientTests
     {
-        private readonly RestClient client;
+        private readonly IRestClient client;
 
         public ClientTests( IRestClientFactory clientFactory )
         {
@@ -36,20 +36,24 @@ namespace Faactory.RestClient.Tests
         [Fact]
         public async Task TestGetTodoJson()
         {
-            var response = await client.GetJsonAsync<Todo>( "todos/1" );
+            var todo = await client.GetJsonAsync<Todo>( "todos/1" );
 
-            Assert.True( response.IsOk() );
-            Assert.NotNull( response.Content );
+            Assert.NotNull( todo );
 
-            Assert.Equal( 1, response.Content.Id );
-            Assert.Equal( 1, response.Content.UserId );
-            Assert.Equal( "delectus aut autem", response.Content.Title );
+            Assert.Equal( 1, todo.Id );
+            Assert.Equal( 1, todo.UserId );
+            Assert.Equal( "delectus aut autem", todo.Title );
         }
 
         [Fact]
-        public async Task TestGetTodoJsonContent()
+        public async Task TestGetTodoDeserialize()
         {
-            var todo = await client.GetJsonAsync<Todo>( "todos/1" ).GetContentAsync();
+            var response = await client.GetAsync( "todos/1" );
+
+            Assert.Equal( 200, response.StatusCode );
+            Assert.NotNull( response.Content );
+
+            var todo = response.Deserialize<Todo>();
 
             Assert.NotNull( todo );
 

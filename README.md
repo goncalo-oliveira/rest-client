@@ -24,7 +24,7 @@ This will give you access to an `IRestClientFactory` interface. Then, wherever y
 ```csharp
 public class MyClass
 {
-    private readonly RestClient client;
+    private readonly IRestClient client;
 
     public MyClass( IRestClientFactory clientFactory )
     {
@@ -34,7 +34,7 @@ public class MyClass
 }
 ```
 
-If creating the client manually, an `HttpClient` instance needs to be passed through
+If you rather create a client instance manually, an `HttpClient` instance needs to be passed into the constructor
 
 ```csharp
 var httpClient = ...
@@ -43,7 +43,7 @@ var restClient = new RestClient( httpClient, "https://jsonplaceholder.typicode.c
 
 ## Using
 
-All request operations respond with a `RestResponse` or `RestObjectResponse`, containing the status code of the operation and the content, if any.
+All request operations respond with a `RestResponse`, containing the response's status code, headers and content, if any.
 
 ```csharp
 var response = await restClient.GetAsync( "todos/1" );
@@ -54,34 +54,19 @@ if ( response.IsOk() )
 }
 ```
 
-## Customization and Scoping
+## Configuring per request
 
-It is possible to customize and/or scope an operation by creating a request before execution. We do that by invoking `Configure` with or without the path to the resource. This allows us to configure the headers, or the query parameters. The method returns a `RestRequest` instance.
-
->Note: If we create a scoped request and then invoke the operation with an url, the latter overrides the scoped url.
-
-Here's an example of a scoped request
-
-```csharp
-var response = await restClient.Configure( "users", options =>
-{
-    options.QueryParameters.Add( "address.city", "Bartholomebury" );
-})
-.GetAsync();
-```
-
-And another one of a non-scoped request
+It is possible to customize a request's configuration, such as headers or query parameters. We do that by invoking `Configure` and a configuration method, which returns a new instance.
 
 ```csharp
 var response = await restClient.Configure( options =>
 {
-    options.Headers.Add( "X-Custom-Header", "custom header value" );
+    options.QueryParameters.Add( "address.city", "Bartholomebury" );
 })
 .GetAsync( "users" );
 ```
 
-Both scoped and non-scoped request instances are reusable and multiple operations can be performed with the same instance.
-Here's an example on reusing a non-scoped request.
+> The instance returned by the `Configure` method is not the same as the original. It's also worth noting that the new instance is reusable and multiple operations can be performed with it. Here's an example
 
 ```csharp
 var request = restClient.Configure( options =>
@@ -107,27 +92,58 @@ var response = await restClient.GetAsync( "todos/1" );
 var todo = response.Deserialize<Todo>();
 ```
 
-Or requesting directly with the JSON extension, which returns a `RestObjectResponse` instead
+Or directly with the request extension, which returns the deserialized instance instead; be aware that this method will only deserialize the content if the response's status code is a 200 (Ok), otherwise it will return `default<T>`. Something else to consider is that this method doesn't give us access to the response's status code and headers.
 
 ```csharp
-var response = await restClient.GetJsonAsync<Todo>( "todos/1" );
-
-var todo = response.Content;
+var todo = await restClient.GetJsonAsync<Todo>( "todos/1" );
 ```
 
-In both scenarios you will have access to the response status code and headers.
-
-When doing a `GET` request with a JSON extension, if you're not interested in the response status or headers, you can *bypass* it and get the content only. If the response status code is not a 200 (OK), the content returned will be `default<T>`.
+For the other request operations, the serialization process is applied the other way around and the response is always a `RestResponse`. For example, a POST request
 
 ```csharp
-var todo = await restClient.GetJsonAsync<Todo>( "todos/1" ).GetContentAsync();
+Todo todo = ...;
+
+var response = await restClient.PostJsonAsync( "todos", todo );
+```
+
+By default, JSON serializer is configured with the following options
+
+```csharp
+new System.Text.Json.JsonSerializerOptions
+{
+    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+    PropertyNameCaseInsensitive = true
+};
+```
+
+This can be changed by calling `ConfigureJsonSerializer` from the builder instance
+
+```csharp
+IServiceCollection services = new ServiceCollection()
+...
+services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
+    .ConfigureJsonSerializer( jsonOptions =>
+    {
+        // ...
+    } );
+```
+
+Alternatively you can configure directly `JsonSerializerOptions`, which is what happens behind the scenes with the previous method.
+
+```csharp
+services.Configure<JsonSerializerOptions>( jsonOptions =>
+{
+    // ...
+} );
 ```
 
 ## Polymorphic JSON Serialization
 
 By default, the client uses Microsoft's JSON serializer, therefore, there is limited support for polymorphic serialization and deserialization is not supported at all. You can find more information in [this article](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism) where you will also find a few workarounds, including writing a custom converter.
 
-If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
+## Custom serializer
+
+As said before, the client uses Microsoft's JSON serializer by default. If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
 
 ```csharp
 public class NewtonsoftJsonSerializer : ISerializer
@@ -154,9 +170,10 @@ If you are using dependency injection, you can add the serializer by injecting i
 IServiceCollection services = new ServiceCollection()
 ...
 services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
+    .AddSerializer<NewtonsoftJsonSerializer>();
 
-// add our custom serializer
-services.AddSingleton<IJsonSerializer, NewtonsoftJsonSerializer>();
+// alternatively you can do this
+//services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
 ```
 
 If you are not using dependency injection, just pass it into the constructor.
@@ -169,7 +186,7 @@ var restClient = new RestClient(
     new NewtonsoftJsonSerializer() );
 ```
 
-You can also pass a custom serializer if deserializing from a `RestResponse` instance
+You can also pass a custom serializer when deserializing from a `RestResponse` instance
 
 ```csharp
 var customSerializer = new NewtonsoftJsonSerializer();
@@ -181,7 +198,7 @@ var todo = response.Deserialize<Todo>( customSerializer );
 
 ## Authorization header
 
-Since version `0.1.4` you can use extensions to configure the `Authorization` header. Currently, the supported schemes are
+You can use extension methods to configure the `Authorization` header. Currently, the supported schemes are
 
 - Basic authentication
 - Bearer token
@@ -193,7 +210,7 @@ IServiceCollection services = new ServiceCollection()
     ...
     .AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com", httpClient =>
     {
-        options.AddBasicAuthentication( "username", "password" );
+        httpClient.AddBasicAuthentication( "username", "password" );
     } )
     ...
 ```
@@ -223,36 +240,3 @@ var response = await restClient.Configure( "users", options =>
 ```
 
 > Note: These extensions require adding the namespace `Faactory.RestClient`
-
-## EXPERIMENTAL: REST-Schema Extensions
-
-If you are working with an API that is compatible with [REST-Schema](https://github.com/goncalo-oliveira/rest-schema-spec), there are a few extensions that you can use. These are experimental features, so they might change in the future, disappear or not function properly.
-
-We can send a map schema spec through the headers by customizing a request with the available extensions.
-
-```csharp
-var response = await restClient.Configure( "users", options =>
-{
-    options.SchemaMap( new {
-        spec = new {
-            _ = new string[] { "id", "name", "email", "address" },
-            address = new string[] { "street", "city", "zipcode" }
-        }
-    } );
-})
-.GetAsync();
-```
-
-Similarly we can send an include schema spec.
-
-```csharp
-var response = await restClient.Configure( "users", options =>
-{
-    options.SchemaInclude( new {
-        spec = new {
-            _ = new string[] { "address" }
-        }
-    } );
-})
-.GetAsync();
-```
