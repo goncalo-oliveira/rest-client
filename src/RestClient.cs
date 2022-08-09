@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,10 +11,24 @@ namespace Faactory.RestClient;
 /// </summary>
 public sealed class RestClient : IRestClient
 {
+    private static Lazy<string> version = new Lazy<string>( 
+        () => Assembly.GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.ToString()
+    );
+
     public RestClient( HttpClient baseHttpClient, ISerializer contentSerializer = null )
     {
         HttpClient = baseHttpClient;
         Serializer = contentSerializer ?? new Json.DefaultJsonSerializer();
+
+        if ( HttpClient.DefaultRequestHeaders.UserAgent.Count == 0 )
+        {
+            HttpClient.DefaultRequestHeaders.UserAgent.Add( 
+                new System.Net.Http.Headers.ProductInfoHeaderValue( 
+                    new System.Net.Http.Headers.ProductHeaderValue( "Faactory.RestClient", version.Value )
+                )
+            );
+        }
     }
 
     public RestClient( HttpClient baseHttpClient, string baseUrl, ISerializer contentSerializer = null )

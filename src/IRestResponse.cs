@@ -15,13 +15,3 @@ public interface IRestResponse
 
     TimeSpan Duration { get; }
 }
-
-/// <summary>
-/// An inteface to a typed rest response
-/// </summary>
-/// <typeparam name="T">The type of the content</typeparam>
-public interface IRestResponse<T> : IRestResponse
-{
-    string ContentType { get; }
-    T Content { get; }
-}

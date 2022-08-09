@@ -95,6 +95,9 @@ namespace Microsoft.Extensions.DependencyInjection
         private static IServiceCollection AddRestClientFactory( this IServiceCollection services )
         {
             services.TryAddSingleton<IRestClientFactory, RestClientFactory>();
+            services.Configure<System.Text.Json.JsonSerializerOptions>(
+                Faactory.RestClient.Json.DefaultJsonSerializer.ConfigureJsonSerializer
+            );
 
             return ( services );
         }

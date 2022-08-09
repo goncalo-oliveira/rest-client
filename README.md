@@ -106,11 +106,44 @@ Todo todo = ...;
 var response = await restClient.PostJsonAsync( "todos", todo );
 ```
 
+By default, JSON serializer is configured with the following options
+
+```csharp
+new System.Text.Json.JsonSerializerOptions
+{
+    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+    PropertyNameCaseInsensitive = true
+};
+```
+
+This can be changed by calling `ConfigureJsonSerializer` from the builder instance
+
+```csharp
+IServiceCollection services = new ServiceCollection()
+...
+services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
+    .ConfigureJsonSerializer( jsonOptions =>
+    {
+        // ...
+    } );
+```
+
+Alternatively you can configure directly `JsonSerializerOptions`, which is what happens behind the scenes with the previous method.
+
+```csharp
+services.Configure<JsonSerializerOptions>( jsonOptions =>
+{
+    // ...
+} );
+```
+
 ## Polymorphic JSON Serialization
 
 By default, the client uses Microsoft's JSON serializer, therefore, there is limited support for polymorphic serialization and deserialization is not supported at all. You can find more information in [this article](https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism) where you will also find a few workarounds, including writing a custom converter.
 
-If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
+## Custom serializer
+
+As said before, the client uses Microsoft's JSON serializer by default. If you rather use [Newtonsoft's Json.NET](https://www.newtonsoft.com/json) (or any other), you can easilly write a custom serializer. Here's an example for Newtonsoft's
 
 ```csharp
 public class NewtonsoftJsonSerializer : ISerializer
@@ -137,9 +170,10 @@ If you are using dependency injection, you can add the serializer by injecting i
 IServiceCollection services = new ServiceCollection()
 ...
 services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
+    .AddSerializer<NewtonsoftJsonSerializer>();
 
-// add our custom serializer
-services.AddSingleton<IJsonSerializer, NewtonsoftJsonSerializer>();
+// alternatively you can do this
+//services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
 ```
 
 If you are not using dependency injection, just pass it into the constructor.

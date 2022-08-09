@@ -20,7 +20,7 @@ namespace Faactory.RestClient
         /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         /// <typeparam name="T">The type of the object to deserialize to</typeparam>
         /// <returns>The response content if succeeded; default( T ) otherwise.</returns>
-        public static async Task<T> GetJsonAsync<T>( this IRestClient client, string url, CancellationToken cancellationToken = default )
+        public static async Task<T> GetJsonAsync<T>( this IRestClient client, string url, CancellationToken cancellationToken = default ) where T : class
         {
             var response = await client.Configure( options =>
             {

@@ -8,7 +8,7 @@ namespace Faactory.RestClient;
 /// <summary>
 /// A raw rest response
 /// </summary>
-public sealed class RestResponse : IRestResponse<byte[]>, IRestResponse
+public sealed class RestResponse : IRestResponse
 {
     internal static readonly RestResponse Empty = new RestResponse();
 
