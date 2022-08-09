@@ -240,36 +240,3 @@ var response = await restClient.Configure( "users", options =>
 ```
 
 > Note: These extensions require adding the namespace `Faactory.RestClient`
-
-## EXPERIMENTAL: REST-Schema Extensions
-
-If you are working with an API that is compatible with [REST-Schema](https://github.com/goncalo-oliveira/rest-schema-spec), there are a few extensions that you can use. These are experimental features, so they might change in the future, disappear or not function properly.
-
-We can send a map schema spec through the headers by customizing a request with the available extensions.
-
-```csharp
-var response = await restClient.Configure( "users", options =>
-{
-    options.SchemaMap( new {
-        spec = new {
-            _ = new string[] { "id", "name", "email", "address" },
-            address = new string[] { "street", "city", "zipcode" }
-        }
-    } );
-})
-.GetAsync();
-```
-
-Similarly we can send an include schema spec.
-
-```csharp
-var response = await restClient.Configure( "users", options =>
-{
-    options.SchemaInclude( new {
-        spec = new {
-            _ = new string[] { "address" }
-        }
-    } );
-})
-.GetAsync();
-```
