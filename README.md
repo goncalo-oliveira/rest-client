@@ -173,7 +173,7 @@ services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com
     .AddSerializer<NewtonsoftJsonSerializer>();
 
 // alternatively you can do this
-//services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
+//services.AddTransient<ISerializer, NewtonsoftJsonSerializer>();
 ```
 
 If you are not using dependency injection, just pass it into the constructor.
