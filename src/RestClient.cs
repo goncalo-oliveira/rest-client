@@ -31,14 +31,6 @@ public sealed class RestClient : IRestClient
         }
     }
 
-    public RestClient( HttpClient baseHttpClient, string baseUrl, ISerializer contentSerializer = null )
-        : this( baseHttpClient, contentSerializer )
-    {
-        HttpClient.BaseAddress = new UriBuilder( baseUrl )
-            .EnsurePathTrailingSlash()
-            .Uri;
-    }
-
     /// <summary>
     /// The underlying HttpClient instance
     /// </summary>
