@@ -6,7 +6,12 @@ namespace Faactory.RestClient;
 /// <summary>
 /// An interface to configure RestClient services
 /// </summary>
-public interface IRestClientBuilder
+public interface IRestClientBuilder : IHttpClientBuilder
 {
-    IServiceCollection Services { get; }
+    /*
+    This interface is just a wrapper around IHttpClientBuilder.
+
+    In future versions, it may become deprecated and removed.
+    For now, it's still used to extend functionality.
+    */
 }

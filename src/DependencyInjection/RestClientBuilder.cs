@@ -5,10 +5,12 @@ namespace Faactory.RestClient;
 
 internal class RestClientBuilder : IRestClientBuilder
 {
-    public RestClientBuilder( IServiceCollection serviceCollection )
+    public RestClientBuilder( string name, IServiceCollection serviceCollection )
     {
+        Name = name;
         Services = serviceCollection;
     }
 
+    public string Name { get; }
     public IServiceCollection Services { get; }
 }

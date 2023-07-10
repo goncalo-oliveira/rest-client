@@ -20,7 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddRestClientFactory();
             services.AddHttpClient();
 
-            return new RestClientBuilder( services );
+            return new RestClientBuilder( string.Empty, services );
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     .Uri;
             } );
 
-            return new RestClientBuilder( services );
+            return new RestClientBuilder( name, services );
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddRestClientFactory();
             services.AddHttpClient( name, configureClient );
 
-            return new RestClientBuilder( services );
+            return new RestClientBuilder( name, services );
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureClient?.Invoke( httpClient );
             } );
 
-            return new RestClientBuilder( services );
+            return new RestClientBuilder( name, services );
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddRestClientFactory();
             services.AddHttpClient( name, configureClient );
 
-            return new RestClientBuilder( services );
+            return new RestClientBuilder( name, services );
         }
 
         private static IServiceCollection AddRestClientFactory( this IServiceCollection services )

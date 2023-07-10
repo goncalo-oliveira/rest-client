@@ -8,7 +8,11 @@ namespace Faactory.RestClient.Tests
     {
         public void ConfigureServices( IServiceCollection services )
         {
-            services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" );
+            services.AddRestClient( "jsonplaceholder", "https://jsonplaceholder.typicode.com" )
+                .ConfigurePrimaryHttpMessageHandler( () => new System.Net.Http.HttpClientHandler
+                {
+                    UseProxy = false
+                } );
             services.AddRestClient( "jsonplaceholder-basicauth", "https://jsonplaceholder.typicode.com", httpClient =>
             {
                 httpClient.AddBasicAuthentication( AuthorizationTests.username, AuthorizationTests.password );
