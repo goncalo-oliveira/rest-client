@@ -2,6 +2,8 @@
 
 This projects contains the implementation for a REST Client for .NET. It's built on top of the original `HttpClient` and fully supports `IHttpClientFactory` for dependency injection.
 
+![dotnet workflow](https://github.com/goncalo-oliveira/rest-client/actions/workflows/dotnet.yml/badge.svg)
+
 ## Getting started
 
 Install the package.
