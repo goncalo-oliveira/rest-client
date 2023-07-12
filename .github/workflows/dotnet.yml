@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Test
 
 on:
   push:
@@ -11,15 +11,17 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore tests/client-tests
+      run: dotnet restore tests
     - name: Build
-      run: dotnet build --no-restore tests/client-tests
+      run: dotnet build --no-restore tests
     - name: Test
-      run: dotnet test --no-build --verbosity normal tests/client-tests
+      run: dotnet test --no-build --verbosity normal tests
