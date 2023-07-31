@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -17,9 +19,14 @@ public sealed class RestClient : IRestClient
     );
 
     public RestClient( HttpClient baseHttpClient, ISerializer contentSerializer = null )
+        : this( baseHttpClient, null, contentSerializer )
+    { }
+
+    public RestClient( HttpClient baseHttpClient, IEnumerable<IRestPreprocessor> preprocessors = null, ISerializer contentSerializer = null )
     {
         HttpClient = baseHttpClient;
         Serializer = contentSerializer ?? new Json.DefaultJsonSerializer();
+        Preprocessors = preprocessors ?? Enumerable.Empty<IRestPreprocessor>();
 
         if ( HttpClient.DefaultRequestHeaders.UserAgent.Count == 0 )
         {
@@ -38,12 +45,18 @@ public sealed class RestClient : IRestClient
 
     public ISerializer Serializer { get; }
 
+    public IEnumerable<IRestPreprocessor> Preprocessors { get; }
+
     public IRestClient Configure( Action<RestRequestOptions> configure )
     {
         var options = new RestRequestOptions();
 
         // add default headers to options
         options.Headers.CopyFrom( HttpClient.DefaultRequestHeaders );
+
+        // add default http version and policy
+        options.Version = HttpClient.DefaultRequestVersion;
+        options.VersionPolicy = HttpClient.DefaultVersionPolicy;
 
         // apply user configuration
         configure?.Invoke( options );

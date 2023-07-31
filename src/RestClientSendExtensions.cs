@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,15 @@ internal static class RestClientSendExtensions
         {
             Content = content
         };
+
+        // TODO: execute preprocessors
+        if ( client.Preprocessors.Any() )
+        {
+            foreach ( var preprocessor in client.Preprocessors )
+            {
+                await preprocessor.ExecuteAsync( message, cancellationToken );
+            }
+        }
 
         configure?.Invoke( message );
 
@@ -39,7 +49,8 @@ internal static class RestClientSendExtensions
             StatusCode = (int)httpResponse.StatusCode,
             Headers = httpResponse.Headers,
             ContentType = httpResponse.Content?.Headers.ContentType?.MediaType,
-            Duration = chrono.Elapsed
+            Duration = chrono.Elapsed,
+            Version = httpResponse.Version
         };
 
         try

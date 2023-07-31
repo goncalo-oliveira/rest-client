@@ -21,6 +21,10 @@ namespace Faactory.RestClient.Tests
             {
                 httpClient.AddBearerToken( AuthorizationTests.bearerToken );
             } );
+
+            services.AddRestClient( "jsonplaceholder-preprocessor", "https://jsonplaceholder.typicode.com" )
+                .AddPreprocessor<PreprocessorTests.InjectPreprocessor>()
+                .AddPreprocessor<PreprocessorTests.TestPreprocessor>();
         }
     }
 }

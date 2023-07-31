@@ -16,6 +16,11 @@ public interface IRestClient
     HttpClient HttpClient { get; }
 
     /// <summary>
+    /// A collection of preprocessors
+    /// </summary>
+    System.Collections.Generic.IEnumerable<IRestPreprocessor> Preprocessors { get; }
+
+    /// <summary>
     /// The configured serializer
     /// </summary>
     ISerializer Serializer { get; }

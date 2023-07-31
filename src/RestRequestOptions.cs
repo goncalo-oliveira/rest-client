@@ -14,6 +14,7 @@ public sealed class RestRequestOptions
     {
         Headers = new HttpRequestMessage().Headers;
         QueryParameters = new NameValueCollection();
+        Version = null;
     }
 
     /// <summary>
@@ -25,6 +26,9 @@ public sealed class RestRequestOptions
     /// Gets the request query parameters
     /// </summary>
     public NameValueCollection QueryParameters { get; internal set; }
+
+    public Version Version { get; set; }
+    public HttpVersionPolicy VersionPolicy { get; set; }
 
     internal void AddAcceptHeader( MediaTypeWithQualityHeaderValue value )
     {

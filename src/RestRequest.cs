@@ -26,6 +26,8 @@ internal sealed class RestRequest : IRestClient
 
     public HttpClient HttpClient => Client.HttpClient;
 
+    public System.Collections.Generic.IEnumerable<IRestPreprocessor> Preprocessors => Client.Preprocessors;
+
     public ISerializer Serializer => Client.Serializer;
 
     public System.Net.Http.Headers.HttpRequestHeaders Headers => options.Headers;
@@ -100,5 +102,9 @@ internal sealed class RestRequest : IRestClient
 
             message.RequestUri = resourceUrl;
         }
+
+        // set HTTP version and policy
+        message.Version = options.Version;
+        message.VersionPolicy = options.VersionPolicy;
     }
 }

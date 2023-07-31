@@ -242,3 +242,33 @@ var response = await restClient.Configure( "users", options =>
 ```
 
 > Note: These extensions require adding the namespace `Faactory.RestClient`
+
+## Preprocessors
+
+Preprocessors are a way to customize a request before it is sent to the server. They are executed in the order they are added to the client.
+
+If you are using dependency injection, you can add preprocessors by injecting them into the container services or by calling `AddPreprocessor` from the builder instance.
+
+
+```csharp
+IServiceCollection services = new ServiceCollection()
+...
+services.AddRestClient( "api", "https://hmac-secured-api.example.com" )
+    .AddPreprocessor<CustomHMACPreprocessor>();
+
+// alternatively you can do this
+//services.AddTransient<IRestPreprocessor, CustomHMACPreprocessor>();
+```
+
+If you are not using dependency injection, you can pass it into the constructor.
+
+```csharp
+var httpClient = ...
+var restClient = new RestClient( 
+    httpClient,
+    "https://hmac-secured-api.example.com",
+    new IRestPreprocessor[]
+    {
+        new CustomHMACPreprocessor()
+    } );
+```

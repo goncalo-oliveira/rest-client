@@ -40,5 +40,10 @@ public sealed class RestResponse : IRestResponse
     /// </summary>
     public TimeSpan Duration { get; internal set; }
 
+    /// <summary>
+    /// Gets the HTTP version
+    /// </summary>
+    public Version Version { get; internal set; }
+
     internal ISerializer Serializer { get; set; }
 }
