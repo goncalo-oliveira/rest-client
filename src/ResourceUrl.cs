@@ -9,7 +9,7 @@ namespace Faactory.RestClient
     /// </summary>
     public sealed class ResourceUrl
     {
-        public ResourceUrl( string urlPath, NameValueCollection urlQuery = null )
+        public ResourceUrl( string urlPath, NameValueCollection? urlQuery = null )
         {
             Path = urlPath;
             QueryParameters = urlQuery ?? new NameValueCollection();
@@ -58,13 +58,13 @@ namespace Faactory.RestClient
         public static ResourceUrl FromString( string url )
         {
             var path = url;
-            NameValueCollection queryParameters = null;
+            NameValueCollection? queryParameters = null;
 
-            if ( path.Contains( "?" ) )
+            if ( path.Contains( '?' ) )
             {
                 int queryIndex = path.IndexOf( '?' );
-                queryParameters = System.Web.HttpUtility.ParseQueryString( path.Substring( queryIndex ) );
-                path = path.Substring( 0, queryIndex );
+                queryParameters = System.Web.HttpUtility.ParseQueryString( path[queryIndex..] );
+                path = path[..queryIndex];
             }
 
             return new ResourceUrl( path, queryParameters );

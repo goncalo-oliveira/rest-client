@@ -11,7 +11,7 @@ public static class RestResponseSerializationExtensions
     /// <param name="response">The response to deserialize the content from</param>
     /// <typeparam name="T">The type of the object to deserialize to</typeparam>
     /// <returns>A deserialized object instance</returns>
-    public static T Deserialize<T>( this RestResponse response )
+    public static T? Deserialize<T>( this RestResponse response )
         => Deserialize<T>( response, response.Serializer );
 
     /// <summary>
@@ -21,12 +21,12 @@ public static class RestResponseSerializationExtensions
     /// <param name="serializer">The content serializer to use for deserialization</param>
     /// <typeparam name="T">The type of the object to deserialize to</typeparam>
     /// <returns>A deserialized object instance</returns>
-    public static T Deserialize<T>( this RestResponse response, ISerializer serializer )
+    public static T? Deserialize<T>( this RestResponse response, ISerializer serializer )
     {
         if ( ( response.Content == null ) || ( response.Content.Length == 0 ) )
         {
             // no content
-            return default( T );
+            return default;
         }
 
         try
@@ -36,7 +36,7 @@ public static class RestResponseSerializationExtensions
         catch
         {
             // we are ignoring deserialization errors and returning null
-            return default( T );
+            return default;
         }
     }
 }

@@ -13,16 +13,16 @@ namespace Faactory.RestClient;
 /// </summary>
 public sealed class RestClient : IRestClient
 {
-    private static Lazy<string> version = new Lazy<string>( 
-        () => Assembly.GetExecutingAssembly()
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.ToString()
+    private static readonly Lazy<string> version = new( 
+        () => typeof( RestClient ).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion.ToString() ?? "0.0.0"
     );
 
-    public RestClient( HttpClient baseHttpClient, ISerializer contentSerializer = null )
+    public RestClient( HttpClient baseHttpClient, ISerializer? contentSerializer = null )
         : this( baseHttpClient, null, contentSerializer )
     { }
 
-    public RestClient( HttpClient baseHttpClient, IEnumerable<IRestPreprocessor> preprocessors = null, ISerializer contentSerializer = null )
+    public RestClient( HttpClient baseHttpClient, IEnumerable<IRestPreprocessor>? preprocessors = null, ISerializer? contentSerializer = null )
     {
         HttpClient = baseHttpClient;
         Serializer = contentSerializer ?? new Json.DefaultJsonSerializer();

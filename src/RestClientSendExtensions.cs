@@ -8,7 +8,7 @@ namespace Faactory.RestClient;
 
 internal static class RestClientSendExtensions
 {
-    public static async Task<RestResponse> SendASync( this IRestClient client, Action<HttpRequestMessage> configure, HttpMethod method, string url, HttpContent content = null, CancellationToken cancellationToken = default )
+    public static async Task<RestResponse> SendASync( this IRestClient client, Action<HttpRequestMessage>? configure, HttpMethod method, string url, HttpContent? content = null, CancellationToken cancellationToken = default )
     {
         if ( url == null )
         {
@@ -32,36 +32,30 @@ internal static class RestClientSendExtensions
         configure?.Invoke( message );
 
         var chrono = System.Diagnostics.Stopwatch.StartNew();
-        var httpResponse = await client.HttpClient.SendAsync( message, HttpCompletionOption.ResponseHeadersRead, cancellationToken );
+        using var httpResponse = await client.HttpClient.SendAsync( message, HttpCompletionOption.ResponseHeadersRead, cancellationToken );
         
         chrono.Stop();
 
         if ( cancellationToken.IsCancellationRequested )
         {
-            httpResponse.Dispose();
-
-            return ( RestResponse.Empty );
+            return RestResponse.Empty;
         }
 
-        var restResponse = new RestResponse
+        var restResponse = new RestResponse( httpResponse, client.Serializer )
         {
-            Serializer = client.Serializer,
-            StatusCode = (int)httpResponse.StatusCode,
-            Headers = httpResponse.Headers,
-            ContentType = httpResponse.Content?.Headers.ContentType?.MediaType,
+            Content = Array.Empty<byte>(),
             Duration = chrono.Elapsed,
-            Version = httpResponse.Version
         };
 
         try
         {
-            restResponse.Content = await httpResponse.Content.ReadAsByteArrayAsync( cancellationToken );
+            if ( httpResponse.Content != null )
+            {
+                restResponse.Content = await httpResponse.Content.ReadAsByteArrayAsync( cancellationToken );
+            }
         }
-        finally
-        {
-            httpResponse.Dispose();
-        }
+        catch { }
 
-        return ( restResponse );
+        return restResponse;
     }
 }

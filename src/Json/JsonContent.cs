@@ -1,11 +1,6 @@
-using  System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Faactory.RestClient.Json
 {
@@ -20,8 +15,10 @@ namespace Faactory.RestClient.Json
         : base( content )
         {
             // Initialize the 'Content-Type' header with information provided by parameters.
-            var headerValue = new MediaTypeHeaderValue( JsonMediaType );
-            headerValue.CharSet = Encoding.UTF8.WebName;
+            var headerValue = new MediaTypeHeaderValue( JsonMediaType )
+            {
+                CharSet = Encoding.UTF8.WebName
+            };
 
             Headers.ContentType = headerValue;            
         }

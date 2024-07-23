@@ -10,30 +10,36 @@ namespace Faactory.RestClient;
 /// </summary>
 public sealed class RestResponse : IRestResponse
 {
-    internal static readonly RestResponse Empty = new RestResponse();
+    internal static readonly RestResponse Empty = new( new HttpResponseMessage(), new Json.DefaultJsonSerializer() );
 
-    internal RestResponse()
-    {}
+    internal RestResponse( HttpResponseMessage httpResponse, ISerializer serializer )
+    {
+        Headers = httpResponse.Headers;
+        StatusCode = (int)httpResponse.StatusCode;
+        ContentType = httpResponse.Content?.Headers.ContentType?.MediaType;
+        Version = httpResponse.Version;
+        Serializer = serializer;
+    }
 
     /// <summary>
     /// Gets the response headers
     /// </summary>
-    public System.Net.Http.Headers.HttpResponseHeaders Headers { get; internal set; }
+    public System.Net.Http.Headers.HttpResponseHeaders Headers { get; }
 
     /// <summary>
     /// Gets the response status code
     /// </summary>
-    public int StatusCode { get; internal set; }
+    public int StatusCode { get; }
 
     /// <summary>
     /// Gets the response content type
     /// </summary>
-    public string ContentType { get; internal set; }
+    public string? ContentType { get; }
 
     /// <summary>
     /// Gets the response content as a byte array
     /// </summary>
-    public byte[] Content { get; internal set; }
+    public byte[] Content { get; internal set; } = Array.Empty<byte>();
 
     /// <summary>
     /// Gets the duration of the request
@@ -43,7 +49,7 @@ public sealed class RestResponse : IRestResponse
     /// <summary>
     /// Gets the HTTP version
     /// </summary>
-    public Version Version { get; internal set; }
+    public Version Version { get; }
 
-    internal ISerializer Serializer { get; set; }
+    internal ISerializer Serializer { get; }
 }

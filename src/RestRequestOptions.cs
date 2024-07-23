@@ -27,8 +27,8 @@ public sealed class RestRequestOptions
     /// </summary>
     public NameValueCollection QueryParameters { get; internal set; }
 
-    public Version Version { get; set; }
-    public HttpVersionPolicy VersionPolicy { get; set; }
+    public Version? Version { get; set; }
+    public HttpVersionPolicy? VersionPolicy { get; set; }
 
     internal void AddAcceptHeader( MediaTypeWithQualityHeaderValue value )
     {

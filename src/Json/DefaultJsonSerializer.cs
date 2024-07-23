@@ -32,7 +32,7 @@ namespace Faactory.RestClient.Json
             return Encoding.UTF8.GetBytes( json );
         }
         
-        public T Deserialize<T>( byte[] content )
+        public T? Deserialize<T>( byte[] content )
             => System.Text.Json.JsonSerializer.Deserialize<T>( content, jsonSerializerOptions );
     }
 }

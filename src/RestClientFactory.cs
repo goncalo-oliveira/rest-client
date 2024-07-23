@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,8 +15,8 @@ internal class RestClientFactory : IRestClientFactory
     public RestClientFactory(
         IHttpClientFactory httpClientFactory,
         IOptions<JsonSerializerOptions> jsonOptionsAccessor,
-        IEnumerable<IRestPreprocessor> preprocessors = null,
-        ISerializer serializer = null
+        IEnumerable<IRestPreprocessor>? preprocessors = null,
+        ISerializer? serializer = null
     )
     {
         this.httpClientFactory = httpClientFactory;

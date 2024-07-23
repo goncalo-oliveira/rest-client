@@ -92,7 +92,7 @@ internal sealed class RestRequest : IRestClient
         // include additional query parameters (for specific/override location)
         if ( options.QueryParameters.HasKeys() )
         {
-            var resourceUrl = ResourceUrl.FromUri( message.RequestUri );
+            var resourceUrl = ResourceUrl.FromUri( message.RequestUri! );
 
             // append/overwrite with configured query parameters
             foreach ( var key in options.QueryParameters.AllKeys )
@@ -104,7 +104,14 @@ internal sealed class RestRequest : IRestClient
         }
 
         // set HTTP version and policy
-        message.Version = options.Version;
-        message.VersionPolicy = options.VersionPolicy;
+        if ( options.Version is not null )
+        {
+            message.Version = options.Version;
+        }
+
+        if ( options.VersionPolicy is not null )
+        {
+            message.VersionPolicy = options.VersionPolicy.Value;
+        }
     }
 }
